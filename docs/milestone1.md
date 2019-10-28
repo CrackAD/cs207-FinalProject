@@ -2,9 +2,22 @@
 
 ## Background
 
-## How to Use xxxxx
-```bash
-./setup.sh
+## How to Use EasyDiff
+```python
+from EasyDiff import Var
+from EasyDiff import AD
+
+K = 2 # two input variables
+f1 = lambda x,y: x**2 + y
+x = Var(K, [2, 1]) # evaluating at x=2 with initial derivative of 1
+y = Var(K, [5, 1]) # evaluating at y=2 with initial derivative of 1
+
+res = AD().auto_diff(f1, [x, y]) # get the result Var instance
+
+print("function value: {}".format(res.dual_paras[0]))
+print("derivative with respect to x: {}".format(res.dual_paras[1]))
+print("derivative with respect to y: {}".format(res.dual_paras[2]))
+
 ```
 ## Software Organization
 
@@ -49,7 +62,7 @@ We will have two core classes as follows:
             ...        
         ...                                
     ```
-    where *func* is a user-defined function (eg, `f1 = lambda x,y: x**2*y`), and *Vars* is an array of ***Var*** instances (eg, instance x, y). 
+    where *func* is a user-defined function (eg, `f1 = lambda x,y: x**2 + y`), and *Vars* is an array of ***Var*** instances (eg, instance x, y). 
 
 1. **What external dependencies will you rely on?**
     We will rely on *numpy* and *math* library for mathematic operations, and *pytest* for testing purpose. 
