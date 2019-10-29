@@ -44,4 +44,3 @@ It's also intuitive to use dual numbers with multivariable functions. Since the 
 For instance, let's say we want to calculate the partial derivatives of x and y of the function 3x^2-2y^3 with the input (5,2). First, to get the partial derivative of x, we substitue x with 5+1ε and y with 2+0ε (when calculating the partial derivative of x, y is a constant). This gives us 59+30ε, saying that the value is 59 at location (5,2), and the derivative of x at that point is 30.
 
 In the same way, we compute the partial derivative of y to be -24 at (5,2)
-```
