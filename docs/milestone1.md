@@ -51,7 +51,7 @@ The key to the method is converting x into a dual number, using 1 for the dual c
 
 In this way, the final solution has the evaluation result (the real component), as well as the derivative in terms of x (the dual component).
 
-### Multivariate Dual Number & AD
+#### Multivariate Dual Number & AD
 
 It's also intuitive to use dual numbers with multivariable functions. Since the expected end result is a partial derivative for each variable in the equation, we would just compute a dual number per variable, and process the entire equation for each of those dual numbers separately.
 
