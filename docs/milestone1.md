@@ -59,10 +59,6 @@ For instance, let's say we want to calculate the partial derivatives of x and y 
 
 In the same way, we compute the partial derivative of y to be -24 at (5,2)
 
-### Multivariate Dual Number: A Simpler Way
-
-
-
 ## How to Use EasyDiff
 First the user needs to install the package using the following command:
 
