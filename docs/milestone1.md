@@ -45,7 +45,7 @@ The forward mode, as the name suggests, traverses the chain rule from inside to 
 
 #### Dual Number & AD
 
-The application of dual numbers (a+εb) is a neat trick in computing AD. We can use dual number operations on numbers to calculate the value of f(x) while calculating f'(x) at the same time. 
+The application of dual numbers (a+εb) is a neat trick in computing AD. We can use dual number operations on numbers to calculate the value of f(x) while calculating f'(x) at the same time. In this way, we get the derivative directly, and the value of the function at the same time, without having to go through the forward mode step by step.
 
 The key to the method is converting x into a dual number, using 1 for the dual component, since we are plugging it in for the value of x, which has a derivative of 1.
 
@@ -58,6 +58,10 @@ It's also intuitive to use dual numbers with multivariable functions. Since the 
 For instance, let's say we want to calculate the partial derivatives of x and y of the function 3x^2-2y^3 with the input (5,2). First, to get the partial derivative of x, we substitue x with 5+1ε and y with 2+0ε (when calculating the partial derivative of x, y is a constant). This gives us 59+30ε, saying that the value is 59 at location (5,2), and the derivative of x at that point is 30.
 
 In the same way, we compute the partial derivative of y to be -24 at (5,2)
+
+### Multivariate Dual Number: A Simpler Way
+
+
 
 ## How to Use EasyDiff
 First the user need to install the package using command
