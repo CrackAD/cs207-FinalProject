@@ -60,6 +60,19 @@ For instance, let's say we want to calculate the partial derivatives of x and y 
 In the same way, we compute the partial derivative of y to be -24 at (5,2)
 
 ## How to Use EasyDiff
+First the user need to install the package using command
+
+```bash
+pip install EasyDiff
+```
+
+After installing the package, the user should import it to do forward mode calculation.
+
+```python
+from EasyDiff import Var
+from EasyDiff import AD
+```
+
 There are two main classes in our EasyDiff package: ***Var*** and ***AD***. User import both class, and use ***Var*** to create input variables, and use ***AD*** to calculate the derivatives, Jacobian matrix, etc. An example of using EasyDiff is shown as follows: 
 
 ```python
