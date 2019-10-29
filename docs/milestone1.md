@@ -89,7 +89,6 @@ res = AD().auto_diff(f1, [x, y]) # get the result Var instance
 print("function value: {}".format(res.dual_paras[0]))
 print("derivative with respect to x: {}".format(res.dual_paras[1]))
 print("derivative with respect to y: {}".format(res.dual_paras[2]))
-
 ```
 ## Software Organization
 
@@ -132,35 +131,35 @@ We will have two core classes as follows:
 <!-- 1. **What method and name attributes will your classes have?** -->
 
 ***Var*** class will have an array of parameters which describe the dual number (ie, the derivatives against each input variable). It has a bunch of overloaded build-in functions (eg, *, /, +, -, **) and other elementary functions (eg, sin, sqrt, log, exp) implementing dual number operations correspondingly. Specifically, it should have the following signature: 
-    ```python
-    class Var():
-        def __init__(self, K, dual_paras):
-            ...
-        def __add__(self, other):
-            ...
-        def __radd__(self, other):
-            ...
+```python
+class Var():
+    def __init__(self, K, dual_paras):
         ...
-        def sin(self):
-            ...
-        def sqrt(self):
-            ...
-        ...                                
-    ```
-    where *K* is the number of input variables, and *dual_paras* describe one specific dual number. 
+    def __add__(self, other):
+        ...
+    def __radd__(self, other):
+        ...
+    ...
+    def sin(self):
+        ...
+    def sqrt(self):
+        ...
+    ...                                
+```
+where *K* is the number of input variables, and *dual_paras* describe one specific dual number. 
 
 ***AD*** class includes some functions that users can use to do AD-related calculation. For example, it can include automatic differentiation, Jacobian matrix calculation, etc. Specifically, it should have the following signature: 
-    ```python
-    class AD():
-        def __init__(self):
-            ...
-        def auto_diff(self, func, Vars):
-            ...
-        def jac_matrix(self, func, Vars):
-            ...        
-        ...                                
-    ```
-    where *func* is a user-defined function (eg, `f1 = lambda x,y: x**2 + y`), and *Vars* is an array of ***Var*** instances (eg, instance x, y). 
+```python
+class AD():
+    def __init__(self):
+        ...
+    def auto_diff(self, func, Vars):
+        ...
+    def jac_matrix(self, func, Vars):
+        ...        
+    ...                                
+```
+where *func* is a user-defined function (eg, `f1 = lambda x,y: x**2 + y`), and *Vars* is an array of ***Var*** instances (eg, instance x, y). 
 
 <!-- 1. **What external dependencies will you rely on?** -->
 We will rely on *numpy* and *math* library for mathematic operations, and *pytest* for testing purpose. 
