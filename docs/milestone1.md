@@ -56,7 +56,7 @@ In this way, the final solution has the evaluation result (the real component), 
 
 It's also intuitive to use dual numbers with multivariable functions. Since the expected end result is a partial derivative for each variable in the equation, we would just compute a dual number per variable, and process the entire equation for each of those dual numbers separately.
 
-For instance, let's say we want to calculate the partial derivatives of x and y of the function $3x^2-2y^3$ with the input (5,2). First, to get the partial derivative of x, we substitue x with $5+1\epsilon_x + 0\epsilon_y$ and y with $2+0\epsilon_x + 1\epsilon_y$ (when calculating the partial derivative of x, y is a constant). This gives us $59+30\epsilon_x - 24 \epsilon_y$, saying that the value is 59 at location (5,2), and the derivative of x at that point is 30 and the partial derivative of y to be -24.
+For instance, let's say we want to calculate the partial derivatives of x and y of the function ![dual](https://latex.codecogs.com/svg.latex?3x^2-2y^3) with the input (5,2). First, to get the partial derivative of x, we substitue x with ![dual](https://latex.codecogs.com/svg.latex?5+1\epsilon_x+0\epsilon_y) and y with ![dual](https://latex.codecogs.com/svg.latex?2+0\epsilon_x+1\epsilon_y) (when calculating the partial derivative of x, y is a constant). This gives us ![dual](https://latex.codecogs.com/svg.latex?59+30\epsilon_x-24\epsilon_y), saying that the value is 59 at location (5,2), and the derivative of x at that point is 30 and the partial derivative of y to be -24.
 
 
 ## How to Use EasyDiff
