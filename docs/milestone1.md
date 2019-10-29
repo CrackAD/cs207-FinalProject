@@ -1,13 +1,13 @@
 ## Introduction
 
-Across a wide range of applications, it’s essential to take derivatives. For example, we take derivatives on a regular basis in optimization problems where we need to find maxima and minima. In computer programming, there are four main ways to compute derivatives: 
+Across a wide range of applications, taking derivatives is essential. For example, we take derivatives on a regular basis in optimization problems where we need to find maxima and minima. In computer programming, there are four main ways to compute derivatives: 
 
 - Manually evaluating them and coding them
 - Performing numerical differentiation using finite difference approximations
 - Using symbolic differentiation using expression manipulation
 - Using automatic differentiation
  
-The first three methods have key shortcomings. Manual differentiation is time consuming. Numerical differentiation can be simple to implement but highly inaccurate due to rounding errors. Finally, symbolic differentiation may lead to overly complicated expressions.
+The first three methods have key shortcomings. Manual differentiation is time consuming. Numerical differentiation can be simple to implement but can be highly inaccurate due to rounding errors. Finally, symbolic differentiation may lead to overly complicated expressions.
  
 In contrast, automatic differentiation has several advantages. It doesn’t require us to run a single expression; we can break things up into manageable parts using the chain rule. It avoids round-off errors that can be introduced by numerical differentiation, leading to more accurate outputs. It can also handle higher derivatives more easily and do so more efficiently; the rules of differentiation and evaluation can be carried out in parallel, requiring only small amounts of extra storage.
  
@@ -16,20 +16,20 @@ In this project, we aim to create an automatic differentiation package so that w
 ## Background
 
 #### Automatic Differentiation & The Forward Mode
-So we know that AD enables us to compute the derivatives of a function efficiently and accurately. Let's now dig further into its mathematical mechanism:
+Given the notion that AD enables us to compute the derivatives of a function efficiently and accurately, let us dig further into its mathematical mechanism:
 
 **The Chain Rule**
 
-The chain rule serves as the fundamentals of AD. It decomposes the derivative calculation for complex functions with multiple layers. A simple example goes as follows:
+The chain rule is fundamental to AD. It decomposes the derivative calculation for complex functions with multiple layers. A simple example goes as follows:
 
 ```
 Let F(x) = f(g(x))
 ```
-The the derivative of F(x) is, by the chain rule
+The derivative of F(x) is, by the chain rule:
 ```
 F'(x)=f'(g(x))g'(x)
 ```
-This can be easily expanded to apply to composites of more than two functions and largely eases the computation of derivatives.
+This expression can be easily expanded to when we need to apply the chain rule to composites of more than two functions, facilitating the computation of derivatives.
 
 **Elementary Function**
 
@@ -40,9 +40,9 @@ Examples include:
 * exponentials, logarithms, triangle functiosns, etc
 * constants
 
-**The Forward Mode**
+**Forward Mode**
 
-The forward mode, as the name suggests, traverses the chain rule from inside to outside. For each step, it calculates a function's current value, as well as the numeric value of this step's elementary function's derivative. In another word, the derivatives are computed in sync with the evaluation steps and combined with other derivatives via the chain rule. Therefore, the forward mode is easy to understand and implement. (note that it is less efficient with a large number of parameters)
+Forward mode, as the name suggests, traverses the chain rule from the inside to the outside of the function. For each step, it calculates a function's current value, as well as the numeric value of this step's elementary function's derivative. In other words, the derivatives are computed in sync with the evaluation steps and are combined with other derivatives via the chain rule. Therefore, the forward mode is easy to understand and implement. (Note that forward mode is less efficient with a large number of parameters.)
 
 #### Dual Number & AD
 
@@ -52,29 +52,27 @@ The key to the method is converting x into a dual number, using 1 for the dual c
 
 In this way, the final solution has the evaluation result (the real component), as well as the derivative in terms of x (the dual component).
 
-### Multivariate Dual Number & AD
+#### Multivariate Dual Number & AD
 
 It's also intuitive to use dual numbers with multivariable functions. Since the expected end result is a partial derivative for each variable in the equation, we would just compute a dual number per variable, and process the entire equation for each of those dual numbers separately.
 
-For instance, let's say we want to calculate the partial derivatives of x and y of the function $3x^2-2y^3$ with the input (5,2). First, to get the partial derivative of x, we substitue x with $5+1\epsilon_x + 0\epsilon_y$ and y with $2+0\epsilon_x + 1\epsilon_y$ (when calculating the partial derivative of x, y is a constant). This gives us $59+30\epsilon_x$, saying that the value is 59 at location (5,2), and the derivative of x at that point is 30.
-
-In the same way, we compute the partial derivative of y to be -24 at (5,2)
+For instance, let's say we want to calculate the partial derivatives of x and y of the function $3x^2-2y^3$ with the input (5,2). First, to get the partial derivative of x, we substitue x with $5+1\epsilon_x + 0\epsilon_y$ and y with $2+0\epsilon_x + 1\epsilon_y$ (when calculating the partial derivative of x, y is a constant). This gives us $59+30\epsilon_x - 24 \epsilon_y$, saying that the value is 59 at location (5,2), and the derivative of x at that point is 30 and the partial derivative of y to be -24.
 
 ## How to Use EasyDiff
-First the user need to install the package using command
+First the user needs to install the package using the following command:
 
 ```bash
 pip install EasyDiff
 ```
 
-After installing the package, the user should import it to do forward mode calculation.
+After installing the package, the user should import it to perform the forward mode calculations:
 
 ```python
 from EasyDiff import Var
 from EasyDiff import AD
 ```
 
-There are two main classes in our EasyDiff package: ***Var*** and ***AD***. User import both class, and use ***Var*** to create input variables, and use ***AD*** to calculate the derivatives, Jacobian matrix, etc. An example of using EasyDiff is shown as follows: 
+There are two main classes in our EasyDiff package: ***Var*** and ***AD***. The user should import both classes. The user should then use ***Var*** to create input variables, and use ***AD*** to calculate the derivatives, Jacobian matrix, etc. An example of using EasyDiff is shown as follows: 
 
 ```python
 from EasyDiff import Var
@@ -90,7 +88,6 @@ res = AD().auto_diff(f1, [x, y]) # get the result Var instance
 print("function value: {}".format(res.dual_paras[0]))
 print("derivative with respect to x: {}".format(res.dual_paras[1]))
 print("derivative with respect to y: {}".format(res.dual_paras[2]))
-
 ```
 ## Software Organization
 
@@ -133,35 +130,35 @@ We will have two core classes as follows:
 <!-- 1. **What method and name attributes will your classes have?** -->
 
 ***Var*** class will have an array of parameters which describe the dual number (ie, the derivatives against each input variable). It has a bunch of overloaded build-in functions (eg, *, /, +, -, **) and other elementary functions (eg, sin, sqrt, log, exp) implementing dual number operations correspondingly. Specifically, it should have the following signature: 
-    ```python
-    class Var():
-        def __init__(self, K, dual_paras):
-            ...
-        def __add__(self, other):
-            ...
-        def __radd__(self, other):
-            ...
+```python
+class Var():
+    def __init__(self, K, dual_paras):
         ...
-        def sin(self):
-            ...
-        def sqrt(self):
-            ...
-        ...                                
-    ```
-    where *K* is the number of input variables, and *dual_paras* describe one specific dual number. 
+    def __add__(self, other):
+        ...
+    def __radd__(self, other):
+        ...
+    ...
+    def sin(self):
+        ...
+    def sqrt(self):
+        ...
+    ...                                
+```
+where *K* is the number of input variables, and *dual_paras* describe one specific dual number. 
 
 ***AD*** class includes some functions that users can use to do AD-related calculation. For example, it can include automatic differentiation, Jacobian matrix calculation, etc. Specifically, it should have the following signature: 
-    ```python
-    class AD():
-        def __init__(self):
-            ...
-        def auto_diff(self, func, Vars):
-            ...
-        def jac_matrix(self, func, Vars):
-            ...        
-        ...                                
-    ```
-    where *func* is a user-defined function (eg, `f1 = lambda x,y: x**2 + y`), and *Vars* is an array of ***Var*** instances (eg, instance x, y). 
+```python
+class AD():
+    def __init__(self):
+        ...
+    def auto_diff(self, func, Vars):
+        ...
+    def jac_matrix(self, func, Vars):
+        ...        
+    ...                                
+```
+where *func* is a user-defined function (eg, `f1 = lambda x,y: x**2 + y`), and *Vars* is an array of ***Var*** instances (eg, instance x, y). 
 
 <!-- 1. **What external dependencies will you rely on?** -->
 We will rely on *numpy* and *math* library for mathematic operations, and *pytest* for testing purpose. 
