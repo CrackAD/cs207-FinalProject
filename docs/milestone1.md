@@ -125,8 +125,9 @@ The core data structures is an array of parameters with size of *K+1* where *K* 
 
 <!-- 1. **What classes will you implement?** -->
 We will have two core classes as follows:
-    - ***Var***: class that defines the dual number, and provides basic operators manipulating on dual numbers including overloaded build-in operators (eg, *, /, +, -, **) and other elementary functions (eg, sin, sqrt, log, exp). 
-    - ***AD***: class that builds on top of ***Var*** and provides interface for users to calculate derivatives in different cases (eg, scalar functions of scalar values, vector functions of vector values, and scalar functions of vector values). 
+
+- ***Var***: class that defines the dual number, and provides basic operators manipulating on dual numbers including overloaded build-in operators (eg, *, /, +, -, **) and other elementary functions (eg, sin, sqrt, log, exp). 
+- ***AD***: class that builds on top of ***Var*** and provides interface for users to calculate derivatives in different cases (eg, scalar functions of scalar values, vector functions of vector values, and scalar functions of vector values). 
 
 <!-- 1. **What method and name attributes will your classes have?** -->
 
