@@ -1,12 +1,12 @@
 ## Introduction
 
-Across a wide range of applications, it’s essential to take derivatives. For example, we take derivatives on a regular basis in optimization problems where we need to find maxima and minima. In computer programming, there are four main ways to compute derivatives: 
+Across a wide range of applications, taking derivatives is essential. For example, we take derivatives on a regular basis in optimization problems where we need to find maxima and minima. In computer programming, there are four main ways to compute derivatives: 
 - Manually evaluating them and coding them
 - Performing numerical differentiation using finite difference approximations
 - Using symbolic differentiation using expression manipulation
 - Using automatic differentiation
  
-The first three methods have key shortcomings. Manual differentiation is time consuming. Numerical differentiation can be simple to implement but highly inaccurate due to rounding errors. Finally, symbolic differentiation may lead to overly complicated expressions.
+The first three methods have key shortcomings. Manual differentiation is time consuming. Numerical differentiation can be simple to implement but can be highly inaccurate due to rounding errors. Finally, symbolic differentiation may lead to overly complicated expressions.
  
 In contrast, automatic differentiation has several advantages. It doesn’t require us to run a single expression; we can break things up into manageable parts using the chain rule. It avoids round-off errors that can be introduced by numerical differentiation, leading to more accurate outputs. It can also handle higher derivatives more easily and do so more efficiently; the rules of differentiation and evaluation can be carried out in parallel, requiring only small amounts of extra storage.
  
@@ -15,20 +15,20 @@ In this project, we aim to create an automatic differentiation package so that w
 ## Background
 
 #### Automatic Differentiation & The Forward Mode
-So we know that AD enables us to compute the derivatives of a function efficiently and accurately. Let's now dig further into its mathematical mechanism:
+Given the notion that AD enables us to compute the derivatives of a function efficiently and accurately, let us dig further into its mathematical mechanism:
 
 **The Chain Rule**
 
-The chain rule serves as the fundamentals of AD. It decomposes the derivative calculation for complex functions with multiple layers. A simple example goes as follows:
+The chain rule is fundamental to AD. It decomposes the derivative calculation for complex functions with multiple layers. A simple example goes as follows:
 
 ```
 Let F(x) = f(g(x))
 ```
-The the derivative of F(x) is, by the chain rule
+The derivative of F(x) is, by the chain rule:
 ```
 F'(x)=f'(g(x))g'(x)
 ```
-This can be easily expanded to apply to composites of more than two functions and largely eases the computation of derivatives.
+This expression can be easily expanded to when we need to apply the chain rule to composites of more than two functions, facilitating the computation of derivatives.
 
 **Elementary Function**
 
@@ -39,9 +39,9 @@ Examples include:
 * exponentials, logarithms, triangle functiosns, etc
 * constants
 
-**The Forward Mode**
+**Forward Mode**
 
-The forward mode, as the name suggests, traverses the chain rule from inside to outside. For each step, it calculates a function's current value, as well as the numeric value of this step's elementary function's derivative. In another word, the derivatives are computed in sync with the evaluation steps and combined with other derivatives via the chain rule. Therefore, the forward mode is easy to understand and implement. (note that it is less efficient with a large number of parameters)
+Forward mode, as the name suggests, traverses the chain rule from the inside to the outside of the function. For each step, it calculates a function's current value, as well as the numeric value of this step's elementary function's derivative. In other words, the derivatives are computed in sync with the evaluation steps and are combined with other derivatives via the chain rule. Therefore, the forward mode is easy to understand and implement. (Note that forward mode is less efficient with a large number of parameters.)
 
 #### Dual Number & AD
 
@@ -60,20 +60,20 @@ For instance, let's say we want to calculate the partial derivatives of x and y 
 In the same way, we compute the partial derivative of y to be -24 at (5,2)
 
 ## How to Use EasyDiff
-First the user need to install the package using command
+First the user needs to install the package using the following command:
 
 ```bash
 pip install EasyDiff
 ```
 
-After installing the package, the user should import it to do forward mode calculation.
+After installing the package, the user should import it to perform the forward mode calculations:
 
 ```python
 from EasyDiff import Var
 from EasyDiff import AD
 ```
 
-There are two main classes in our EasyDiff package: ***Var*** and ***AD***. User import both class, and use ***Var*** to create input variables, and use ***AD*** to calculate the derivatives, Jacobian matrix, etc. An example of using EasyDiff is shown as follows: 
+There are two main classes in our EasyDiff package: ***Var*** and ***AD***. The user should import both classes. The user should then use ***Var*** to create input variables, and use ***AD*** to calculate the derivatives, Jacobian matrix, etc. An example of using EasyDiff is shown as follows: 
 
 ```python
 from EasyDiff import Var
