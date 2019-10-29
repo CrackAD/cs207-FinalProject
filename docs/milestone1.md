@@ -46,7 +46,7 @@ Forward mode, as the name suggests, traverses the chain rule from the inside to 
 
 #### Dual Number & AD
 
-The application of dual numbers (a+εb) is a neat trick in computing AD. We can use dual number operations on numbers to calculate the value of f(x) while calculating f'(x) at the same time. 
+The application of dual numbers (a+εb) is a neat trick in computing AD. We can use dual number operations on numbers to calculate the value of f(x) while calculating f'(x) at the same time. In this way, we get the derivative directly, and the value of the function at the same time, without having to go through the forward mode step by step.
 
 The key to the method is converting x into a dual number, using 1 for the dual component, since we are plugging it in for the value of x, which has a derivative of 1.
 
