@@ -1,6 +1,7 @@
 ## Introduction
 
 Across a wide range of applications, it’s essential to take derivatives. For example, we take derivatives on a regular basis in optimization problems where we need to find maxima and minima. In computer programming, there are four main ways to compute derivatives: 
+
 - Manually evaluating them and coding them
 - Performing numerical differentiation using finite difference approximations
 - Using symbolic differentiation using expression manipulation
@@ -55,7 +56,7 @@ In this way, the final solution has the evaluation result (the real component), 
 
 It's also intuitive to use dual numbers with multivariable functions. Since the expected end result is a partial derivative for each variable in the equation, we would just compute a dual number per variable, and process the entire equation for each of those dual numbers separately.
 
-For instance, let's say we want to calculate the partial derivatives of x and y of the function 3x^2-2y^3 with the input (5,2). First, to get the partial derivative of x, we substitue x with 5+1ε and y with 2+0ε (when calculating the partial derivative of x, y is a constant). This gives us 59+30ε, saying that the value is 59 at location (5,2), and the derivative of x at that point is 30.
+For instance, let's say we want to calculate the partial derivatives of x and y of the function $3x^2-2y^3$ with the input (5,2). First, to get the partial derivative of x, we substitue x with $5+1\epsilon_x + 0\epsilon_y$ and y with $2+0\epsilon_x + 1\epsilon_y$ (when calculating the partial derivative of x, y is a constant). This gives us $59+30\epsilon_x$, saying that the value is 59 at location (5,2), and the derivative of x at that point is 30.
 
 In the same way, we compute the partial derivative of y to be -24 at (5,2)
 
