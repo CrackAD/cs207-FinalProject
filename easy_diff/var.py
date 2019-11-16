@@ -112,7 +112,7 @@ class Var():
         der = value * np.log(other) * self.der
         return Var(value, der)
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         ''' returns a Var as the result of self / other
 
         args:
@@ -121,7 +121,7 @@ class Var():
         '''
         return self * (other ** (-1))
     
-    def __rdiv__(self, other):
+    def __rtruediv__(self, other):
         ''' returns a Var as the result of other / self
 
         args:
@@ -170,6 +170,104 @@ class Var():
         except AttributeError:
             return True
 
+    @staticmethod
+    def log(var):
+        ''' returns a Var as the result of var.log()
+
+        args:
+            var: a Var object or real number
+        '''
+        try:
+            val = np.log(var.val)
+            der = list(map(lambda x: x / var.val, var.der))
+            return Var(val, der)
+        except AttributeError:
+            return np.log(var)
+        
+    @staticmethod
+    def logk(var, k):
+        ''' returns a Var as the result of var.logk()
+
+        args:
+            var: a Var object or a real number
+            k: the base for log
+        '''
+        try:
+            val = np.log(var.val) / np.log(k)
+            der = list(map(lambda x: x / var.val * (1/np.log(k)), var.der))
+            return Var(val, der)
+        except AttributeError:
+            return np.log(var) / np.log(k)
+        
+    @staticmethod
+    def exp(var):
+        ''' returns a Var as the result of var.exp()
+
+        args:
+            var: a Var object or a real number
+        '''
+        try:
+            val = np.exp(var.val)
+            der = list(map(lambda x: x * val, var.der))
+            return Var(val, der)
+        except AttributeError:
+            return np.exp(var)
+
+    @staticmethod
+    def sqrt(var):
+        ''' returns a Var as the result of var.sqrt()
+
+        args:
+            var: a Var object or a real number
+        '''
+        try:
+            val = np.sqrt(var.val)
+            der = list(map(lambda x: 0.5 * (var.val ** (-0.5)) * x, var.der))
+            return Var(val, der)
+        except AttributeError:
+            return np.sqrt(var)
+
+    @staticmethod
+    def sin(var):
+        ''' returns a Var as the result of var.sin()
+
+        args:
+            var: a Var object or a real number
+        '''
+        try:
+            val = np.sin(var.val)
+            der = list(map(lambda x: np.cos(var.val) * x, var.der))
+            return Var(val, der)
+        except AttributeError:
+            return np.sin(var)
+
+    @staticmethod
+    def cos(var):
+        ''' returns a Var as the result of var.cos()
+
+        args:
+            var: a Var object or a real number
+        '''
+        try:
+            val = np.cos(var.val)
+            der = list(map(lambda x: -np.sin(var.val) * x, var.der))
+            return Var(val, der)
+        except AttributeError:
+            return np.cos(var)
+
+    @staticmethod
+    def tan(var):
+        ''' returns a Var as the result of var.tan()
+
+        args:
+            var: a Var object or a real number
+        '''
+        try:
+            val = np.tan(var.val)
+            der = list(map(lambda x: 1 / (np.cos(var.val) ** 2) * x, var.der))
+            return Var(val, der)
+        except AttributeError:
+            return np.tan(var)
 
 
 if __name__ == "__main__":
@@ -234,4 +332,34 @@ if __name__ == "__main__":
     z8 = x*y
     print('x * y: {}'.format(vars(z8)))
 
-        
+
+    x = Var(3, np.array([1]))
+
+    # log
+    z1 = Var.log(x)
+    print('log(x): {}'.format(vars(z1)))
+
+    # logk
+    z1 = Var.logk(x, 3.0)
+    print('logk(x, 3.0): {}'.format(vars(z1)))
+
+    # exp
+    z1 = Var.exp(x)
+    print('exp(x): {}'.format(vars(z1)))
+    
+    # sqrt
+    z1 = Var.sqrt(x)
+    print('sqrt(x): {}'.format(vars(z1)))
+    
+    # sin
+    z1 = Var.sin(x)
+    print('sin(x): {}'.format(vars(z1)))
+    
+    # cos
+    z1 = Var.cos(x)
+    print('cos(x): {}'.format(vars(z1)))
+    
+    # tan
+    z1 = Var.tan(x)
+    print('tan(x): {}'.format(vars(z1)))
+    
