@@ -129,6 +129,25 @@ class Var():
             other: a Var object or a real number (numerator)
         '''
         return other*(self**(-1))
+
+
+    def __div__(self, other):
+        ''' returns a Var as the result of self / other
+
+        args:
+            self: a Var object (numerator)
+            other: a Var object or a real number (denominator)
+        '''
+        return self * (other ** (-1))
+    
+    def __rdiv__(self, other):
+        ''' returns a Var as the result of other / self
+
+        args:
+            self: a Var object (denominator)
+            other: a Var object or a real number (numerator)
+        '''
+        return other*(self**(-1))
     
     def __neg__(self):
         ''' returns a Var as the result of - self
@@ -179,7 +198,7 @@ class Var():
         '''
         try:
             val = np.log(var.val)
-            der = list(map(lambda x: x / var.val, var.der))
+            der = np.array(list(map(lambda x: x / var.val, var.der)))
             return Var(val, der)
         except AttributeError:
             return np.log(var)
@@ -194,7 +213,7 @@ class Var():
         '''
         try:
             val = np.log(var.val) / np.log(k)
-            der = list(map(lambda x: x / var.val * (1/np.log(k)), var.der))
+            der = np.array(list(map(lambda x: x / var.val * (1/np.log(k)), var.der)))
             return Var(val, der)
         except AttributeError:
             return np.log(var) / np.log(k)
@@ -208,7 +227,7 @@ class Var():
         '''
         try:
             val = np.exp(var.val)
-            der = list(map(lambda x: x * val, var.der))
+            der = np.array(list(map(lambda x: x * val, var.der)))
             return Var(val, der)
         except AttributeError:
             return np.exp(var)
@@ -222,7 +241,7 @@ class Var():
         '''
         try:
             val = np.sqrt(var.val)
-            der = list(map(lambda x: 0.5 * (var.val ** (-0.5)) * x, var.der))
+            der = np.array(list(map(lambda x: 0.5 * (var.val ** (-0.5)) * x, var.der)))
             return Var(val, der)
         except AttributeError:
             return np.sqrt(var)
@@ -236,7 +255,7 @@ class Var():
         '''
         try:
             val = np.sin(var.val)
-            der = list(map(lambda x: np.cos(var.val) * x, var.der))
+            der = np.array(list(map(lambda x: np.cos(var.val) * x, var.der)))
             return Var(val, der)
         except AttributeError:
             return np.sin(var)
@@ -250,7 +269,7 @@ class Var():
         '''
         try:
             val = np.cos(var.val)
-            der = list(map(lambda x: -np.sin(var.val) * x, var.der))
+            der = np.array(list(map(lambda x: -np.sin(var.val) * x, var.der)))
             return Var(val, der)
         except AttributeError:
             return np.cos(var)
@@ -264,7 +283,7 @@ class Var():
         '''
         try:
             val = np.tan(var.val)
-            der = list(map(lambda x: 1 / (np.cos(var.val) ** 2) * x, var.der))
+            der = np.array(list(map(lambda x: 1 / (np.cos(var.val) ** 2) * x, var.der)))
             return Var(val, der)
         except AttributeError:
             return np.tan(var)

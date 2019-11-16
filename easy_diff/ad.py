@@ -1,4 +1,5 @@
 from var import Var
+import numpy as np
 
 class AD():
     def __init__(self, vals, ders):
@@ -32,10 +33,11 @@ class AD():
 if __name__ == "__main__":
     f1 = lambda x, y: Var.log(x) ** Var.sin(y)
     
-    ad = AD([1, 2], [1, 1])
+    ad = AD(np.array([2, 2]), np.array([1, 1]))
     print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
 
     f1 = lambda x: Var.log(x) ** 2
     
-    ad = AD([1], [3])
+    ad = AD(np.array([2]), np.array([1]))
     print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
+
