@@ -172,71 +172,66 @@ class Var():
 
 
 
+if __name__ == "__main__":
+    x = Var(3, np.array([1,0]))
+    y = Var(2, np.array([0,1]))
+    z = Var(3, np.array([1,0]))
+
+    # eq, ne
+    print(x==y)
+    print(x == z)
+    print(x!=y)
+    print(x != z)
+
+    # neg
+    z1 = -x
+    print('-x: {}'.format(vars(z1)))
+    z2 = -(x**2)
+    print('-x**2: {}'.format(vars(z2)))
+
+    # div
+    z1 = x / y
+    print('x / y: {}'.format(vars(z1)))
+    z2 = x / 2
+    print('x / 2: {}'.format(vars(z2)))
+
+    # pow
+    z1 = x**y
+    print('x ** y: {}'.format(vars(z1)))
+    z2 = x**2
+    print('x ** 2: {}'.format(vars(z2)))
+    z3 = 2**x
+    print('2 ** x: {}'.format(vars(z3)))
+    z4 = x**(-1)
+    print('x ** (-1): {}'.format(vars(z4)))
+
+    # sub
+    z1 = x - y
+    print('x - y: {}'.format(vars(z1)))
+    z2 = x - 2
+    print('x - 2: {}'.format(vars(z2)))
+    z3 = 2 - x
+    print('2 - x: {}'.format(vars(z3)))
 
 
-x = Var(3, np.array([1,0]))
-y = Var(2, np.array([0,1]))
-z = Var(3, np.array([1,0]))
+    # add
+    z1 = x + y
+    print('x + y: {}'.format(vars(z1)))
+    z2 = x + 1
+    print('x + 1: {}'.format(vars(z2)))
+    z3 = 1 + x
+    print('1 + x: {}'.format(vars(z3)))
 
-'''eq, ne
-print(x==y)
-print(x == z)
-print(x!=y)
-print(x != z)
-'''
-''' neg
-z1 = -x
-print('-x: {}'.format(vars(z1)))
-z2 = -(x**2)
-print('-x**2: {}'.format(vars(z2)))
-'''
+    # mul
+    z4 = y*2
+    print('y * 2: {}'.format(vars(z4)))
+    z5 = 2*y
+    print('2 * y: {}'.format(vars(z5)))
+    z6 = -1*y
+    print('-1 * y: {}'.format(vars(z6)))
+    z7 = y*(-1)
+    print('y * (-1): {}'.format(vars(z7)))
+    z8 = x*y
+    print('x * y: {}'.format(vars(z8)))
 
-''' div
-z1 = x / y
-print('x / y: {}'.format(vars(z1)))
-z2 = x / 2
-print('x / 2: {}'.format(vars(z2)))
-'''
-''' pow
-z1 = x**y
-print('x ** y: {}'.format(vars(z1)))
-z2 = x**2
-print('x ** 2: {}'.format(vars(z2)))
-z3 = 2**x
-print('2 ** x: {}'.format(vars(z3)))
-z4 = x**(-1)
-print('x ** (-1): {}'.format(vars(z4)))
-'''
-'''
-sub
-z1 = x - y
-print('x - y: {}'.format(vars(z1)))
-z2 = x - 2
-print('x - 2: {}'.format(vars(z2)))
-z3 = 2 - x
-print('2 - x: {}'.format(vars(z3)))
-'''
-
-'''
-add
-z1 = x + y
-print('x + y: {}'.format(vars(z1)))
-z2 = x + 1
-print('x + 1: {}'.format(vars(z2)))
-z3 = 1 + x
-print('1 + x: {}'.format(vars(z3)))
-
-mul
-z4 = y*2
-print('y * 2: {}'.format(vars(z4)))
-z5 = 2*y
-print('2 * y: {}'.format(vars(z5)))
-z6 = -1*y
-print('-1 * y: {}'.format(vars(z6)))
-z7 = y*(-1)
-print('y * (-1): {}'.format(vars(z7)))
-z8 = x*y
-print('x * y: {}'.format(vars(z8)))
-'''
-
-    
+        
