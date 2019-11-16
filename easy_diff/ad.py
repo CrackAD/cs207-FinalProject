@@ -34,3 +34,8 @@ if __name__ == "__main__":
     
     ad = AD([1, 2], [1, 1])
     print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
+
+    f1 = lambda x: Var.log(x) ** 2
+    
+    ad = AD([1], [3])
+    print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
