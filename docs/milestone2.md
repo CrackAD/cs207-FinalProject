@@ -138,37 +138,6 @@ Then, you can run the file in a terminal as follows:
 python3 yourname.py
 ```
 
-## How to Use EasyDiff
-First the user needs to install the package using the following command:
-
-```bash
-pip install EasyDiff
-```
-
-After installing the package, the user should import it to perform the forward mode calculations:
-
-```python
-from EasyDiff import Var
-from EasyDiff import AD
-```
-
-There are two main classes in our EasyDiff package: ***Var*** and ***AD***. The user should import both classes. The user should then use ***Var*** to create input variables, and use ***AD*** to calculate the derivatives, Jacobian matrix, etc. An example of using EasyDiff is shown as follows: 
-
-```python
-from EasyDiff import Var
-from EasyDiff import AD
-
-K = 2 # two input variables
-f1 = lambda x,y: x**2 + y
-x = Var(K, [2, 1]) # evaluating at x=2 with initial derivative of 1
-y = Var(K, [5, 1]) # evaluating at y=5 with initial derivative of 1
-
-res = AD().auto_diff(f1, [x, y]) # get the result Var instance
-
-print("function value: {}".format(res.dual_paras[0]))
-print("derivative with respect to x: {}".format(res.dual_paras[1]))
-print("derivative with respect to y: {}".format(res.dual_paras[2]))
-```
 ## Software Organization
 
 Our directory structure will look like:
