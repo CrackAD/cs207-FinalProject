@@ -36,7 +36,7 @@ This expression can be easily expanded to when we need to apply the chain rule t
 An elementary function is a simple function of one variable. 
 
 Examples include:
-* arithmetic operations (+ – × ÷)
+* arithmetic operations (+ – × /)
 * exponentials, logarithms, triangle functiosns, etc
 * constants
 
@@ -46,7 +46,7 @@ Forward mode, as the name suggests, traverses the chain rule from the inside to 
 
 #### Dual Number & AD
 
-The application of dual numbers (a+εb) is a neat trick in computing AD. We can use dual number operations on numbers to calculate the value of f(x) while calculating f'(x) at the same time. In this way, we get the derivative directly, and the value of the function at the same time, without having to go through the forward mode step by step.
+The application of dual numbers (![dual](https://latex.codecogs.com/svg.latex?a+b\epsilon)) is a neat trick in computing AD. We can use dual number operations on numbers to calculate the value of f(x) while calculating f'(x) at the same time. In this way, we get the derivative directly, and the value of the function at the same time, without having to go through the forward mode step by step.
 
 The key to the method is converting x into a dual number, using 1 for the dual component, since we are plugging it in for the value of x, which has a derivative of 1.
 
@@ -56,7 +56,7 @@ In this way, the final solution has the evaluation result (the real component), 
 
 It's also intuitive to use dual numbers with multivariable functions. Since the expected end result is a partial derivative for each variable in the equation, we would just compute a dual number per variable, and process the entire equation for each of those dual numbers separately.
 
-For instance, let's say we want to calculate the partial derivatives of x and y of the function $3x^2-2y^3$ with the input (5,2). First, to get the partial derivative of x, we substitue x with $5+1\epsilon_x + 0\epsilon_y$ and y with $2+0\epsilon_x + 1\epsilon_y$ (when calculating the partial derivative of x, y is a constant). This gives us $59+30\epsilon_x - 24 \epsilon_y$, saying that the value is 59 at location (5,2), and the derivative of x at that point is 30 and the partial derivative of y to be -24.
+For instance, let's say we want to calculate the partial derivatives of x and y of the function ![dual](https://latex.codecogs.com/svg.latex?3x^2-2y^3) with the input (5, 2). First, to get the partial derivative of x, we substitue x with ![dual](https://latex.codecogs.com/svg.latex?5+1\epsilon_x+0\epsilon_y) and y with ![dual](https://latex.codecogs.com/svg.latex?2+0\epsilon_x+1\epsilon_y) (when calculating the partial derivative of x, y is a constant). This gives us ![dual](https://latex.codecogs.com/svg.latex?59+30\epsilon_x-24\epsilon_y), saying that the value is 59 at location (5, 2), and the derivative of x at that point is 30 and the partial derivative of y to be -24.
 
 
 ## How to Use EasyDiff
@@ -125,8 +125,9 @@ The core data structures is an array of parameters with size of *K+1* where *K* 
 
 <!-- 1. **What classes will you implement?** -->
 We will have two core classes as follows:
-    - ***Var***: class that defines the dual number, and provides basic operators manipulating on dual numbers including overloaded build-in operators (eg, *, /, +, -, **) and other elementary functions (eg, sin, sqrt, log, exp). 
-    - ***AD***: class that builds on top of ***Var*** and provides interface for users to calculate derivatives in different cases (eg, scalar functions of scalar values, vector functions of vector values, and scalar functions of vector values). 
+
+- ***Var***: class that defines the dual number, and provides basic operators manipulating on dual numbers including overloaded build-in operators (eg, *, /, +, -, **) and other elementary functions (eg, sin, sqrt, log, exp). 
+- ***AD***: class that builds on top of ***Var*** and provides interface for users to calculate derivatives in different cases (eg, scalar functions of scalar values, vector functions of vector values, and scalar functions of vector values). 
 
 <!-- 1. **What method and name attributes will your classes have?** -->
 
