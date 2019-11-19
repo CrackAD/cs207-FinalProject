@@ -1,5 +1,4 @@
 import numpy as np
-
 class Var():
     '''
     This class defines a multivariate dual number

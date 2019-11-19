@@ -1,4 +1,4 @@
-from var import Var
+from EasyDiff.var import Var
 import numpy as np
 
 class AD():
@@ -86,7 +86,6 @@ class AD():
             for j in range(len(self.vars)):
                 res[i][j] = res_der[j]
         return res       
-
 
 if __name__ == "__main__":
     import doctest

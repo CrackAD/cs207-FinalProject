@@ -120,8 +120,8 @@ Note that it is suggested to always try `conda install` first.
 
 To use CrackAD, create a .py file (`yourname.py`) with the following lines of code:
 ```
-from EasyDiff import Var
-from EasyDiff import AD
+from EasyDiff.ad import AD
+from EasyDiff.var import Var
 import numpy as np
 
 # give it a function of your choice
