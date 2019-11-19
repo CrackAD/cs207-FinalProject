@@ -144,27 +144,32 @@ Our directory structure will look like:
 
 ```
 EasyDiff/
-	easydiff/
+	__init__.py
+	ad.py
+	var.py
+	tests/
 		__init__.py
-		ad.py
-		var.py
-		tests/
-			__init__.py
-			test.py
-	README.md
-	setup.py
-	LICENSE
+		test_ad.py
+		test_var.py
+docs/
+	milestone1.md
+	milestone2.md
+	generalized_chain_rule.png
+	milestone2_graph.png	
+README.md
+requirements.txt
+LICENSE
 ```
 In the directory, we have two python modules `ad.py` and `var.py`. 
 
-* `ad.py`: interfaces for automatic-differentiation-related calculations (eg, Jacobian matrix)
+* `ad.py`: main algorithms including automatic differentiation and calculating jacobian matrix
 * `var.py`: dual number constructions, basic math operations overloaded, and other elementary functions. 
 
-We also plan on including dependencies `numpy` and `math` to overload elementory operations.
+We also include dependencies `numpy` to overload elementory operations.
 
-Our test suite will be in the `test` folder, and we will implement `pytest` to write comprehensive tests to provide full coverage for our code. We will also use `TravisCI` and `CodeCov` to automate the testing process.
+Our test suite is in the `tests` folder, and we implement `pytest` and `doctest` to write comprehensive tests to provide full coverage for our code. We use `TravisCI` and `CodeCov` to automate the testing process.
 
-PyPI will be used to distribute our package, as it enables the user to install our package using `pip`.
+EasyDiff has not been distributed on PyPI yet. Instead, users could manully clone our project repository to their personal workspace. Instructions of manual installation is specified in the **Installation** section above.
 
 ## Implementation
 
@@ -225,3 +230,16 @@ Currently, we cover the following elementary functions:
 
 For python build-in operations (the first two rows), we overload them following the corresponding dual number operations; 
 for other elementary functions (the last two rows), we implement them within **Var** class as static methods. 
+
+## Future
+
+#### Aspects not implemented yet
+Our implementation currently allows multple functions with multiple inputs.
+
+#### Additional features
+We are planning to add two additional features:
+
+* option for the second-order derivative
+* an interface for users who are not familiar with Python lambda function to use our package to calculate derivatives 
+
+To enable the second-order derivatives, we need to change the data structure in Var.py by adding another list for second derivatives. As for the interface, we are planning to create another module UI.py, which is an encapsulation of AD.py.
