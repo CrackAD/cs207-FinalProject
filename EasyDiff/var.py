@@ -317,7 +317,6 @@ class Var():
         1.0 [-0.5 -0. ]
         """
         return other*(self**(-1))
-
     
     def __neg__(self):
         """ returns a Var as the result of - self
