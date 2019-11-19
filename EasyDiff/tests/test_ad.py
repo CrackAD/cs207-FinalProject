@@ -19,6 +19,9 @@ def test_two_variables():
 	f1 = lambda x, y: Var.log(x) ** Var.sin(y)
 	assert AD.auto_diff(self=ad,func=f1) == Var(pytest.approx(0.7165772257590739),np.array([pytest.approx(0.47001694),pytest.approx(0.10929465)]))
 
-
-
-
+def test_jac_matrix():
+	f1 = lambda x, y: Var.log(x) ** Var.sin(y)
+	f2 = lambda x, y: Var.sqrt(x) / y
+	ad = AD(np.array([4.12, 5.13]), np.array([1, 1]))
+	assert np.array_equal(ad.jac_matrix([f1, f2]), np.array([[pytest.approx(-0.11403015), pytest.approx(0.10263124)], [pytest.approx(0.048018), pytest.approx(-0.07712832)]]))
+        
