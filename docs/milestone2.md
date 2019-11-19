@@ -28,8 +28,13 @@ Let F(x) = f(g(x))
 The derivative of F(x) is, by the chain rule:
 ```
 F'(x)=f'(g(x))g'(x)
+
 ```
-This expression can be easily expanded to when we need to apply the chain rule to composites of more than two functions, facilitating the computation of derivatives.
+In the case where we have more than one independent variable, this expression can be easily expanded. We apply the chain rule to composites of more than two functions, facilitating the computation of derivatives.
+
+The generalized chain rule can be shown as:
+
+![](generalized_chain_rule.png)
 
 **Elementary Function**
 
@@ -43,6 +48,10 @@ Examples include:
 **Forward Mode**
 
 Forward mode, as the name suggests, traverses the chain rule from the inside to the outside of the function. For each step, it calculates a function's current value, as well as the numeric value of this step's elementary function's derivative. In other words, the derivatives are computed in sync with the evaluation steps and are combined with other derivatives via the chain rule. Therefore, the forward mode is easy to understand and implement. (Note that forward mode is less efficient with a large number of parameters.)
+
+For example, we can look at the following funciton, graph, and table to show how we approach the computation with the chain rule in forward mode:
+
+![](milestone2_graph.png)
 
 #### Dual Number & AD
 
