@@ -17,27 +17,24 @@ class AD():
         
         EXAMPLES
         =======
-        >>> f1 = lambda x, y: Var.log(x) ** Var.sin(y)
-    
         >>> ad = AD(np.array([2, 2]), np.array([1, 1]))
-        >>> print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
-        Var.log(x) ** Var.sin(y): {'val': 0.7165772257590739, 'der': array([0.47001694, 0.10929465])}
+        >>> print(vars(ad.vars[0]), vars(ad.vars[1]))
+        {'val': 2, 'der': array([1, 0])} {'val': 2, 'der': array([0, 1])}
         """
         assert(len(vals) == len(ders))
 
         self.vars = []
-        self.dimen = len(vals)
+        dimen = len(vals)
         cnt = 0
         for val, der in zip(vals, ders):
-            der_list = [0 for i in range(self.dimen)]
+            der_list = np.array([0 for i in range(dimen)])
             der_list[cnt] = der
             self.vars.append(Var(val, der_list))
             cnt += 1
 
     def auto_diff(self, func):
         """
-        passing all of the items in the fruits list into the print function call as separate arguments, 
-        without us even needing to know how many arguments are in the list.
+        Passing a function to a AD object, and return the final Var object with val and der.
 
         INPUT
         =======
@@ -45,44 +42,67 @@ class AD():
         
         RETURNS
         =======
-        returns the attributes of the function
+        returns the final Var object with val and der
         
         EXAMPLES
         =======
+        >>> f1 = lambda x, y: Var.log(x) ** Var.sin(y)
+        >>> ad = AD(np.array([2, 2]), np.array([1, 1]))
+        >>> print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
+        Var.log(x) ** Var.sin(y): {'val': 0.7165772257590739, 'der': array([0.47001694, 0.10929465])}
         >>> f1 = lambda x: Var.log(x) ** 2
-        
         >>> ad = AD(np.array([2]), np.array([1]))
         >>> print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
-        Var.log(x) ** 2: {'val': 0.4804530139182014, 'der': array([0.69314718])}        
+        Var.log(x) ** 2: {'val': 0.4804530139182014, 'der': array([0.69314718])}
         """
         return func(*self.vars)
 
     def jac_matrix(self, funcs):
         pass
         """
-        seems like we need to finalize
+        Passing a list of functions to a AD object, and return the Jacobian Matrix.
 
         INPUT
         =======
-        lorem ipsum
+        a list of functions
         
         RETURNS
         =======
-        lorem ipsum
-        
+        Jacobian Matrix
+
         EXAMPLES
         =======
+        >>> f1 = lambda x, y: Var.log(x) ** Var.sin(y)
+        >>> f2 = lambda x, y: Var.sqrt(x) / y
+        >>> ad = AD(np.array([4.12, 5.13]), np.array([1, 1]))
+        >>> print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
+        jac_matrix: 
+        [[-0.11403015  0.10263124]
+         [ 0.048018   -0.07712832]]
         """
+        res = np.zeros(shape=(len(funcs), len(self.vars)))
+        for i, func in enumerate(funcs):
+            res_der = self.auto_diff(func).der
+            for j in range(len(self.vars)):
+                res[i][j] = res_der[j]
+        return res       
+
 
 if __name__ == "__main__":
-    f1 = lambda x, y: Var.log(x) ** Var.sin(y)
-    
-    ad = AD(np.array([2, 2]), np.array([1, 1]))
-    print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
+    import doctest
+    doctest.testmod(verbose=True)
 
-    f1 = lambda x: Var.log(x) ** 2
-    
-    ad = AD(np.array([2]), np.array([1]))
-    print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
-    
+
+    # f1 = lambda x, y: Var.log(x) ** Var.sin(y)
+    # ad = AD(np.array([2, 2]), np.array([1, 1]))
+    # print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
+
+    # f1 = lambda x: Var.log(x) ** 2
+    # ad = AD(np.array([2]), np.array([1]))
+    # print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
+
+    # f1 = lambda x, y: Var.log(x) ** Var.sin(y)
+    # f2 = lambda x, y: Var.sqrt(x) / y
+    # ad = AD(np.array([4.12, 5.13]), np.array([1, 1]))
+    # print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
 

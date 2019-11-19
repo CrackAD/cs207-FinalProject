@@ -310,54 +310,6 @@ class Var():
         
         EXAMPLES
         =======
-   
-   
-        """
-        return other*(self**(-1))
-
-
-    def __div__(self, other):
-        """ returns a Var as the result of self / other
-
-        INPUT
-        =======
-        self: a Var object (numerator)
-        other: a Var object or a real number (denominator)
-        
-        RETURNS
-        =======
-        Var object: a new Var object with new val and ders
-        
-        EXAMPLES
-        =======
-        >>> x = Var(3, np.array([1,0]))
-        >>> y = Var(2, np.array([0,1]))
-        >>> z = Var(3, np.array([1,0]))
-        >>> z1 = x / y
-        >>> print('x / y: {}'.format(vars(z1)))
-        x / y: {'val': 1.5, 'der': array([ 0.5 , -0.75])}
-        >>> z2 = x / 2
-        >>> print('x / 2: {}'.format(vars(z2)))
-        x / 2: {'val': 1.5, 'der': array([0.5, 0. ])}
-        
-        """
-        
-        return self * (other ** (-1))
-    
-    def __rdiv__(self, other):
-        """ returns a Var as the result of other / self
-
-        INPUT
-        =======
-        self: a Var object (denominator)
-        other: a Var object or a real number (numerator)
-        
-        RETURNS
-        =======
-        Var object: a new Var object with new val and ders
-        
-        EXAMPLES
-        =======
         >>> x = Var(2, np.array([1,0]))
         >>> y = 2
         >>> v = y*(x**(-1))
@@ -365,6 +317,7 @@ class Var():
         1.0 [-0.5 -0. ]
         """
         return other*(self**(-1))
+
     
     def __neg__(self):
         """ returns a Var as the result of - self
