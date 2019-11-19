@@ -1,6 +1,8 @@
 import pytest
 import numpy as np
-import var
+import sys, os
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '/../')
 from var import Var
 
 
