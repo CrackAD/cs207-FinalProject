@@ -41,11 +41,19 @@ class Var():
         return self * other
 
     def __sub__(self, other):
-        pass
-    
+        try: # two Var objects
+            z = Var(self.value - other.value)
+            self.children.append((1.0, z)) # weight = ∂z/∂self = 1
+            other.children.append((-1.0, z)) # weight = ∂z/∂other = -1
+            return z
+        except AttributeError: # Var + real number
+            z = Var(self.value - other)
+            self.children.append((1.0, z))
+            return z
+
     def __rsub__(self, other):
-        pass
-    
+        return -1 *(self - other)
+
     def __pow__(self, other):
         pass
     
