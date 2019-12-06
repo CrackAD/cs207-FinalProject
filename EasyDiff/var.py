@@ -232,7 +232,7 @@ class Var():
             value = self.val**other.val
             der = other.val * (self.val ** (other.val - 1)) * self.der + value * np.log(self.val) * other.der
             return Var(value, der)
-        except AttributeError: # Var - real number
+        except AttributeError: # Var ** real number
             return Var(self.val**other, other * (self.val ** (other-1)) * self.der)
 
     def __rpow__(self, other):
