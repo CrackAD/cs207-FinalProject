@@ -1,0 +1,67 @@
+Trying:
+    a = Rev_Var(1)
+Expecting nothing
+ok
+Trying:
+    print(a.value, a.children, a.grad_value)
+Expecting:
+    1 [] None
+ok
+Trying:
+    y = Rev_Var(3.0)
+Expecting nothing
+ok
+Trying:
+    z = Rev_Var.expk(4.0, y)
+Expecting nothing
+ok
+Trying:
+    z.grad_value = 1
+Expecting nothing
+ok
+Trying:
+    print(y.grad(), 4**3*np.log(4))
+Expecting:
+    88.722839111673, 88.722839111673
+**********************************************************************
+File "rev_var.py", line 45, in __main__.Rev_Var.grad
+Failed example:
+    print(y.grad(), 4**3*np.log(4))
+Expected:
+    88.722839111673, 88.722839111673
+Got:
+    88.722839111673 88.722839111673
+25 items had no tests:
+    __main__
+    __main__.Rev_Var
+    __main__.Rev_Var.__add__
+    __main__.Rev_Var.__eq__
+    __main__.Rev_Var.__mul__
+    __main__.Rev_Var.__ne__
+    __main__.Rev_Var.__neg__
+    __main__.Rev_Var.__pos__
+    __main__.Rev_Var.__pow__
+    __main__.Rev_Var.__radd__
+    __main__.Rev_Var.__rmul__
+    __main__.Rev_Var.__rpow__
+    __main__.Rev_Var.__rsub__
+    __main__.Rev_Var.__rtruediv__
+    __main__.Rev_Var.__sub__
+    __main__.Rev_Var.__truediv__
+    __main__.Rev_Var.cos
+    __main__.Rev_Var.exp
+    __main__.Rev_Var.expk
+    __main__.Rev_Var.log
+    __main__.Rev_Var.logk
+    __main__.Rev_Var.sin
+    __main__.Rev_Var.sinh
+    __main__.Rev_Var.sqrt
+    __main__.Rev_Var.tan
+1 items passed all tests:
+   2 tests in __main__.Rev_Var.__init__
+**********************************************************************
+1 items had failures:
+   1 of   4 in __main__.Rev_Var.grad
+6 tests in 27 items.
+5 passed and 1 failed.
+***Test Failed*** 1 failures.

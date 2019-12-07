@@ -8,6 +8,8 @@ import numpy as np
 import pytest
 from rev_var import Rev_Var
 
+print(y)
+
 #a = Var(1)
 #print(a.value, a.children, a.grad_value)
 
@@ -137,4 +139,5 @@ z1 = Var.exp(x)
 z1.grad_value = 1
 print(x.grad(), np.exp(2))
 print(z1.value, np.exp(2))
+
 '''
