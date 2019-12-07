@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 class Var():
     '''
     This class defines a multivariate dual number
@@ -101,7 +102,6 @@ class Var():
         =======
         >>> x = Var(3, np.array([1,0]))
         >>> y = Var(2, np.array([0,1]))
-        >>> z = Var(3, np.array([1,0]))
         >>> z4 = y*2
         >>> z5 = 2*y
         >>> z6 = -1*y
@@ -120,7 +120,7 @@ class Var():
         """
         try: # two Var objects
             value = self.val * other.val
-            der = self.val*other.der + other.val * self.der
+            der = self.val*other.der + other.val * self.der # dz / dx1 = dz/dx * dx/dx1 + dz/dy * dy/dx1
             return Var(value, der)
         except AttributeError: # Var * real number
             return Var(self.val*other, self.der * other)
@@ -162,7 +162,6 @@ class Var():
         =======
         >>> x = Var(3, np.array([1,0]))
         >>> y = Var(2, np.array([0,1]))
-        >>> z = Var(3, np.array([1,0]))
         >>> z1 = x - y
         >>> print('x - y: {}'.format(vars(z1)))
         x - y: {'val': 1, 'der': array([ 1, -1])}
@@ -331,7 +330,7 @@ class Var():
         EXAMPLES
         =======
         >>> x = Var(2, np.array([1]))
-        >>> p = (-1) * x
+        >>> p = -x
         >>> print(p.val, p.der)
         -2 [-1]
         """
@@ -351,7 +350,7 @@ class Var():
         EXAMPLES
         =======
         >>> x = Var(2, np.array([1]))
-        >>> print(x.val, x.der)
+        >>> print(+x.val, +x.der)
         2 [1]
         """
         return Var(self.val, self.der)
@@ -488,6 +487,63 @@ class Var():
             return Var(val, der)
         except AttributeError:
             return np.exp(var)
+    
+    @staticmethod
+    def expk(var, k):
+        """ returns a Var as the result of k ** (var)
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        k: the base of the exponential
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new val and ders
+        
+        EXAMPLES
+        =======
+        >>> x = Var(3, np.array([1,0]))
+        >>> z = Var.expk(x, 4)
+        >>> z.val == pytest.approx(4**3)
+        True
+        >>> z.der== pytest.approx([4**3*np.log(4), 0])
+        True
+        """
+        try: # var is a Var variable
+            val = k ** var.val
+            der = val * np.log(k) * var.der
+            return Var(val, der)
+        except AttributeError: # var is a real number
+            return k ** var
+        
+    @staticmethod
+    def logistic(var):
+        """ returns a Var as the result of 1 / (1 + e^(-var))
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and der
+
+        EXAMPLES
+        =======
+        >>> x = Var(3.0, np.array([1,0]))
+        >>> z = Var.logistic(x)
+        >>> z.val == pytest.approx(1 / (1 + np.exp(-3)))
+        True
+        >>> z.der == pytest.approx([np.exp(3) / ((1 + np.exp(3))**2), 0])
+        True
+        """
+        try:
+            val = 1 / (1 + np.exp(-var.val)) # logistic(x) = 1 / (1 + e^(-x))
+            der =  val * (1-val) * var.der# dz/x1 = dz/dx * dx/dx1 = (e^x/ ((1 + e^x)**2)) * dx/dx1
+            return Var(val, der)
+        except AttributeError: # var is a real number
+            return 1 / (1 + np.exp(-var))
 
     @staticmethod
     def sqrt(var):
@@ -515,6 +571,90 @@ class Var():
         except AttributeError:
             return np.sqrt(var)
 
+    @staticmethod
+    def sinh(var):
+        """ returns a Var as the result of sinh(var)
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+
+        EXAMPLES
+        =======
+        >>> x = Var(3, np.array([1,0])) 
+        >>> z = Var.sinh(x)
+        >>> z.val == pytest.approx((np.exp(3)-np.exp(-3)) / 2)
+        True
+        >>> z.der == pytest.approx([(np.exp(3)+np.exp(-3)) / 2, 0])
+        True
+        """
+        try:
+            val = (np.exp(var.val) - np.exp(-var.val)) / 2 # sinh(x) = (e^x - e^(-x)) / 2
+            # df/dx1 = df/dx * dx/dx1 = (e^x + e^(-x)) / 2 * dx/dx1
+            der = ((np.exp(var.val) + np.exp(-var.val)) / 2) * var.der
+            return Var(val, der)
+        except: # var is a real number
+            return (np.exp(var) - np.exp(-var)) / 2
+    
+    @staticmethod
+    def cosh(var):
+        """ returns a Var as the result of cosh(var)
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+
+        EXAMPLES
+        =======
+        >>> x = Var(3, np.array([1,0])) 
+        >>> z = Var.cosh(x)
+        >>> z.val == pytest.approx((np.exp(3)+np.exp(-3)) / 2)
+        True
+        >>> z.der == pytest.approx([(np.exp(3)-np.exp(-3)) / 2, 0])
+        True
+        """
+        try:
+            val = (np.exp(var.val) + np.exp(-var.val)) / 2 # # cosh(x) = (e^x + e^(-x)) / 2
+            # df/dx1 = df/dx * dx/dx1 = (e^x - e^(-x)) / 2 * dx/dx1
+            der = ((np.exp(var.val) - np.exp(-var.val)) / 2) * var.der
+            return Var(val, der)
+        except: # var is a real number
+            return (np.exp(var) + np.exp(-var)) / 2
+
+    @staticmethod
+    def tanh(var):
+        """ returns a Var as the result of tanh(var)
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+
+        EXAMPLES
+        =======
+        >>> x = Var(3, np.array([1,0])) 
+        >>> z = Var.tanh(x)
+        >>> z.val == pytest.approx((np.exp(3)-np.exp(-3)) / (np.exp(3)+np.exp(-3)))
+        True
+        >>> z.der == pytest.approx([4 / (np.exp(6) + np.exp(-6) + 2), 0])
+        True
+        """
+        try:
+            return Var.sinh(var) / Var.cosh(var)
+        except: # var is a real number
+            return (np.exp(var) - np.exp(-var)) / (np.exp(var) + np.exp(-var))
+    
     @staticmethod
     def sin(var):
         """ returns a Var as the result of var.sin()
@@ -595,10 +735,92 @@ class Var():
         except AttributeError:
             return np.tan(var)
 
+    @staticmethod
+    def arcsin(var):
+        """ returns a Var as the result of var.arcsin()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new val and ders
+        
+        EXAMPLES
+        =======
+        >>> x = Var(0.5, np.array([1,0])) 
+        >>> z1 = Var.arcsin(x)
+        >>> print('arcsin(x): {}'.format(vars(z1)))
+        arcsin(x): {'val': 0.5235987755982988, 'der': array([1.15470054, 0.        ])}
+        """
+        try:
+            val = np.arcsin(var.val)
+            der = np.array(list(map(lambda x: 1 / ((1 - var.val ** 2) ** 0.5) * x, var.der)))
+            return Var(val, der)
+        except AttributeError:
+            return np.arcsin(var)
+
+    @staticmethod
+    def arccos(var):
+        """ returns a Var as the result of var.cos()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new val and ders
+        
+        EXAMPLES
+        =======
+        >>> x = Var(0.5, np.array([1,0])) 
+        >>> z1 = Var.arccos(x)
+        >>> print('arccos(x): {}'.format(vars(z1)))
+        arccos(x): {'val': 1.0471975511965976, 'der': array([-1.15470054, -0.        ])}
+        """
+        try:
+            val = np.arccos(var.val)
+            der = np.array(list(map(lambda x: -1 / ((1 - var.val ** 2) ** 0.5) * x, var.der)))
+            return Var(val, der)
+        except AttributeError:
+            return np.arccos(var)
+
+    @staticmethod
+    def arctan(var):
+        """ returns a Var as the result of var.arctan()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new val and ders
+        
+        EXAMPLES
+        =======
+        >>> x = Var(3, np.array([1,0])) 
+        >>> z1 = Var.arctan(x)
+        >>> print('arctan(x): {}'.format(vars(z1)))
+        arctan(x): {'val': 1.2490457723982544, 'der': array([0.1, 0. ])}
+        """
+        try:
+            val = np.arctan(var.val)
+            der = np.array(list(map(lambda x: 1 / (1 + var.val ** 2) * x, var.der)))
+            return Var(val, der)
+        except AttributeError:
+            return np.arctan(var)
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=True)
 
+    # expk
+    # x = Var(3, np.array([1,0]))
+    # z = Var.expk(x, 4)
+    # print(vars(z))
     # x = Var(3, np.array([1,0]))
     # y = Var(2, np.array([0,1]))
     # z = Var(3, np.array([1,0]))
@@ -690,4 +912,17 @@ if __name__ == "__main__":
     # # tan
     # z1 = Var.tan(x)
     # print('tan(x): {}'.format(vars(z1)))
+    
+
+    # x = Var(0.5, np.array([1,0])) 
+    # z1 = Var.arcsin(x)
+    # print('arcsin(x): {}'.format(vars(z1)))
+
+    # x = Var(0.5, np.array([1,0])) 
+    # z1 = Var.arccos(x)
+    # print('arccos(x): {}'.format(vars(z1)))
+    
+    # x = Var(3, np.array([1,0])) 
+    # z1 = Var.arctan(x)
+    # print('arctan(x): {}'.format(vars(z1)))
     
