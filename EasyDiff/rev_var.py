@@ -14,6 +14,13 @@ class Var():
         RETURNS
         =======
         Var object: self.value, self.children [(weight, Var)], and self.grad_value
+        
+        EXAMPLES
+        =======
+        >>> a = Var(1)
+        >>> print(a.value, a.children, a.grad_value)
+        1 [] None
+        
         """
         self.value = value
         self.children = [] # store the <weight, Var> tuple for all its child. 
@@ -29,6 +36,13 @@ class Var():
         RETURNS
         =======
         Var object: a Var object with updated partial derivative df/dself
+        
+        EXAMPLES
+        =======
+        >>> a = Var(1)
+        >>> print(Var.grad(a))
+        0
+        
         """
         if self.grad_value is None:
             self.grad_value = sum(weight * var.grad()
@@ -46,6 +60,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and no children
+        
+        EXAMPLES
+        =======
+        
         """
         try: # two Var objects
             z = Var(self.value + other.value)
@@ -68,6 +86,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and no children
+        
+        EXAMPLES
+        =======
+        
         """
         return self + other
 
@@ -82,6 +104,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with value and no children
+        
+        EXAMPLES
+        =======
+        
         """
         try: # two Var objects
             z = Var(self.value * other.value)
@@ -104,6 +130,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and no children
+        
+        EXAMPLES
+        =======
+        
         """
         return self * other
 
@@ -118,6 +148,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        
         """
         try: # two Var objects
             z = Var(self.value - other.value)
@@ -140,6 +174,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        
         """
         return -1 *(self - other)
 
@@ -153,6 +191,10 @@ class Var():
         
         RETURNS
         =======
+        
+        EXAMPLES
+        =======
+        
         Var object: a new Var object with new value and children
         """
         try: # two Var objects
@@ -177,6 +219,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        
         """
         # the only scenario using this is when other is a real number and self is a Var object
         z = Var(other **self.value)
@@ -194,6 +240,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        
         """
         return self * (other ** (-1))
 
@@ -208,6 +258,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        
         """
         return other*(self**(-1))
     
@@ -221,6 +275,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        
         """
         ans= Var(-self.value)
         ans.children = [(-1, self)]
@@ -239,6 +297,10 @@ class Var():
         RETURNS
         =======
         Var object: a Var object
+        
+        EXAMPLES
+        =======
+        
         """
         return self.copy()
 
@@ -253,6 +315,10 @@ class Var():
         RETURNS
         =======
         a boolean value
+        
+        EXAMPLES
+        =======
+        
         """
         try:
             # check equal value, derivative, and number of children
@@ -278,6 +344,10 @@ class Var():
         RETURNS
         =======
         a boolean value
+        
+        EXAMPLES
+        =======
+        
         """
         try:
             return not (self == other)
@@ -295,6 +365,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new val and children
+
+        EXAMPLES
+        =======        
+    
         """
         try: # a Var object
             z = Var(np.log(var.value))
@@ -314,6 +388,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new val and children
+    
+        EXAMPLES
+        =======
+        
         """
         try: # a Var object
             z = Var(np.log(var.value) / np.log(k))
@@ -333,6 +411,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+
         """
         try:
             z = Var(np.exp(var.value))
@@ -353,6 +435,10 @@ class Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        
         """
         try:
             z = Var(np.sqrt(var.value))
