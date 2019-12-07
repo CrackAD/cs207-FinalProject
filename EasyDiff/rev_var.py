@@ -44,6 +44,7 @@ class Rev_Var():
         >>> z.grad_value = 1
         >>> print(y.grad(), 4**3*np.log(4))
         88.722839111673 88.722839111673
+        
         """
         if self.grad_value is None:
             self.grad_value = sum(weight * var.grad()
@@ -64,7 +65,17 @@ class Rev_Var():
         
         EXAMPLES
         =======
-        
+        >>> x = Rev_Var(2.0)
+        >>> y = Rev_Var(3.0)    
+        >>> z1 = x + y
+        >>> print('x + y: {}'.format(vars(z1)))        
+        x + y: {'value': 5.0, 'children': [], 'grad_value': None}
+        >>> z2 = x + 1
+        >>> print('x + 1: {}'.format(vars(z2)))
+        x + 1: {'value': 3.0, 'children': [], 'grad_value': None}
+        >>> z3 = 1 + x
+        >>> print('1 + x: {}'.format(vars(z3)))
+        1 + x: {'value': 3.0, 'children': [], 'grad_value': None}
         
         """
         try: # two Var objects
@@ -91,6 +102,10 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> x = Rev_Var(2.0)
+        >>> t = 3 + x
+        >>> print(t.value, t.grad_value)
+        5.0 None
         
         """
         return self + other
@@ -109,6 +124,24 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> z = Rev_Var(3.0)
+        >>> z4 = y*2
+        >>> z5 = 2*y
+        >>> z6 = -1*y
+        >>> z7 = y*(-1)
+        >>> z8 = x*y
+        >>> print(vars(z4))
+        {'value': 4.0, 'children': [], 'grad_value': None}
+        >>> print(vars(z5))
+        {'value': 4.0, 'children': [], 'grad_value': None}
+        >>> print(vars(z6))
+        {'value': -2.0, 'children': [], 'grad_value': None}
+        >>> print(vars(z7)) 
+        {'value': -2.0, 'children': [], 'grad_value': None}
+        >>> print(vars(z8))  
+        {'value': 6.0, 'children': [], 'grad_value': None}
         
         """
         try: # two Var objects
@@ -135,6 +168,10 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> x = Rev_Var(2.0)
+        >>> t = 3 * x
+        >>> print(t.value, t.grad_value)
+        6.0 None
         
         """
         return self * other
@@ -153,8 +190,20 @@ class Rev_Var():
         
         EXAMPLES
         =======
-        
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> z = Rev_Var(3.0)
+        >>> z1 = x - y
+        >>> print('x - y: {}'.format(vars(z1)))
+        x - y: {'value': 1.0, 'children': [], 'grad_value': None}
+        >>> z2 = x - 2
+        >>> print('x - 2: {}'.format(vars(z2)))
+        x - 2: {'value': 1.0, 'children': [], 'grad_value': None}
+        >>> z3 = 2 - x
+        >>> print('2 - x: {}'.format(vars(z3)))
+        2 - x: {'value': -1.0, 'children': [], 'grad_value': None}
         """
+        
         try: # two Var objects
             z = Rev_Var(self.value - other.value)
             self.children.append((1.0, z)) # weight = dz/dself = 1
@@ -179,6 +228,11 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> x = Rev_Var(2.0)
+        >>> t = 3 - x
+        >>> print(t.value, t.grad_value)
+        1.0 None
+
         
         """
         return -1 *(self - other)
@@ -193,11 +247,20 @@ class Rev_Var():
         
         RETURNS
         =======
+        Var object: a new Var object with new value and children
         
         EXAMPLES
         =======
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> z = Rev_Var(3.0)
+        >>> z1 = x**y
+        >>> print('x ** y: {}'.format(vars(z1)))
+        x ** y: {'value': 9.0, 'children': [], 'grad_value': None}
+        >>> z2 = x**2
+        >>> print('x ** 2: {}'.format(vars(z2)))
+        x ** 2: {'value': 9.0, 'children': [], 'grad_value': None}
         
-        Var object: a new Var object with new value and children
         """
         try: # two Var objects
             val = self.value**other.value
@@ -230,6 +293,22 @@ class Rev_Var():
         >>> print(y.grad(), 2**3*np.log(2))
         5.545177444479562 5.545177444479562
         
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> z = Rev_Var(3.0)
+        >>> z1 = x**y
+        >>> print('x ** y: {}'.format(vars(z1)))
+        x ** y: {'value': 9.0, 'children': [], 'grad_value': None}
+        >>> z2 = x**2
+        >>> print('x ** 2: {}'.format(vars(z2)))
+        x ** 2: {'value': 9.0, 'children': [], 'grad_value': None}
+        >>> z3 = 2**x
+        >>> print('2 ** x: {}'.format(vars(z3)))
+        2 ** x: {'value': 8.0, 'children': [], 'grad_value': None}
+        >>> z4 = x**(-1)
+        >>> print('x ** (-1): {}'.format(vars(z4)))
+        x ** (-1): {'value': 0.3333333333333333, 'children': [], 'grad_value': None}
+        
         """
         # the only scenario using this is when other is a real number and self is a Var object
         z = Rev_Var(other **self.value)
@@ -250,6 +329,14 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> y = Rev_Var(3.0)
+        >>> x = Rev_Var(2.0)
+        >>> z4 = x/y
+        >>> z4.grad_value = 1
+        >>> print(x.grad(), 1/3)
+        0.3333333333333333 0.3333333333333333
+        >>> print(y.grad(),-2/(3**2))
+        -0.2222222222222222 -0.2222222222222222
         
         """
         return self * (other ** (-1))
@@ -268,6 +355,11 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> p = x * (y * (-1))
+        >>> print(p.value, p.grad_value)
+        -6.0 None
         
         """
         return other*(self**(-1))
@@ -285,7 +377,19 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> z6 = x/2
+        >>> z7 = x/2
+        >>> print(z6 != z7)
+        False
+        >>> x = Rev_Var(2.0)
+        >>> x2 = Rev_Var(2.0)
+        >>> print(x != x2)
+        False
+        >>> y = Rev_Var(3.0)
+        >>> print(x != y)
+        True
         
+
         """
         ans= Rev_Var(-self.value)
         ans.children = [(-1, self)]
@@ -307,7 +411,13 @@ class Rev_Var():
         
         EXAMPLES
         =======
-        
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> print(x.value, x.grad_value)
+        3.0 None
+        >>> print(y.value, y.grad_value)
+        2.0 None
+
         """
         return self.copy()
 
@@ -325,6 +435,13 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> z6 = x/2
+        >>> z7 = x/2
+        >>> print(z6 == z7)
+        True
+        >>> x2 = Rev_Var(2.0)
+        >>> print(x == x2)
+        False
         
         """
         try:
@@ -354,7 +471,13 @@ class Rev_Var():
         
         EXAMPLES
         =======
-        
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> z = Rev_Var(3.0)
+        >>> print(x!=y)
+        True
+        >>> print(x != z)
+        False
         """
         try:
             return not (self == other)
@@ -375,7 +498,12 @@ class Rev_Var():
 
         EXAMPLES
         =======        
-    
+        >>> x = Rev_Var(2.0)
+        >>> z1 = Rev_Var.log(x)
+        >>> z1.grad_value = 1
+        >>> print(x.grad(), 1/2)
+        0.5 0.5
+        
         """
         try: # a Var object
             z = Rev_Var(np.log(var.value))
@@ -398,6 +526,13 @@ class Rev_Var():
     
         EXAMPLES
         =======
+        >>> x = Rev_Var(2.0)
+        >>> z2 = Rev_Var.logk(x, 3.0)
+        >>> z2.grad_value = 1
+        >>> print(z2.value, np.log(2) / np.log(3))
+        0.6309297535714574 0.6309297535714574
+        >>> print(x.grad(), 1/(2*np.log(3)))
+        0.45511961331341866 0.45511961331341866
         
         """
         try: # a Var object
@@ -421,6 +556,13 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> x = Rev_Var(2.0)
+        >>> z1 = Rev_Var.exp(x)
+        >>> z1.grad_value = 1
+        >>> print(x.grad(), np.exp(2))
+        7.38905609893065 7.38905609893065
+        >>> print(z1.value, np.exp(2))
+        7.38905609893065 7.38905609893065
 
         """
         try:
@@ -442,6 +584,19 @@ class Rev_Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> z = Rev_Var(3.0)
+        >>> z1 = Rev_Var.exp(x)
+        >>> z2 = Rev_Var.exp(y)
+        >>> print('exp(x): {}'.format(vars(z1)))
+        exp(x): {'value': 20.085536923187668, 'children': [], 'grad_value': None}
+        >>> print('exp(y): {}'.format(vars(z2)))
+        exp(y): {'value': 7.38905609893065, 'children': [], 'grad_value': None}
+        
         """
         try:
             z = Rev_Var(k**var.value)
@@ -461,6 +616,14 @@ class Rev_Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> z1 = Rev_Var.sinh(x)
+        >>> print('sinh(x): {}'.format(vars(z1)))
+        sinh(x): {'value': 10.017874927409903, 'children': [], 'grad_value': None}
+        
         """
         try:
             z = Rev_Var((np.exp(var.value) - np.exp(-var.value)) / 2)
@@ -480,6 +643,14 @@ class Rev_Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> z1 = Rev_Var.cosh(x)
+        >>> print('cosh(x): {}'.format(vars(z1)))
+        cosh(x): {'value': 10.017874927409903, 'children': [], 'grad_value': None}
+
         """
         try:
             z = Rev_Var((np.exp(var.value) - np.exp(-var.value)) / 2)
@@ -520,15 +691,60 @@ class Rev_Var():
     
     @staticmethod
     def sin(var):
+        """ returns a Var as the result of var.sin()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> z1 = Rev_Var.sin(x)
+        >>> z2 = Rev_Var.sin(y)
+        >>> print('sin(x): {}'.format(vars(z1)))
+        sin(x): {'value': 0.1411200080598672, 'children': [], 'grad_value': None}
+        >>> print('sin(y): {}'.format(vars(z2)))
+        sin(y): {'value': 0.9092974268256817, 'children': [], 'grad_value': None}
+        """
+        
         try:
             z = Rev_Var(np.sin(var.value))
             var.children.append((np.cos(var.value), z)) # weight = dz/dvar = cos(var.value)
             return z
         except:
             return np.sin(var)
+        
 
     @staticmethod
     def cos(var):
+        """ returns a Var as the result of var.cos()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> z1 = Rev_Var.cos(x)
+        >>> z2 = Rev_Var.cos(y)
+        >>> print('cos(x): {}'.format(vars(z1)))
+        cos(x): {'value': -0.9899924966004454, 'children': [], 'grad_value': None}
+        >>> print('cos(y): {}'.format(vars(z2)))
+        cos(y): {'value': -0.4161468365471424, 'children': [], 'grad_value': None}
+        
+        """
         try:
             z = Rev_Var(np.cos(var.value))
             var.children.append((-np.sin(var.value), z)) # weight = dz/dvar = -sin(var.value)
@@ -538,6 +754,28 @@ class Rev_Var():
     
     @staticmethod
     def tan(var):
+        """ returns a Var as the result of var.tan()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> y = Rev_Var(2.0)
+        >>> z1 = Rev_Var.tan(x)
+        >>> z2 = Rev_Var.tan(y)
+        >>> print('tan(x): {}'.format(vars(z1)))
+        tan(x): {'value': -0.1425465430742778, 'children': [], 'grad_value': None}
+        >>> print('tan(y): {}'.format(vars(z2)))
+        tan(y): {'value': -2.185039863261519, 'children': [], 'grad_value': None}
+        """
+        
         try:
             z = Rev_Var(np.tan(var.value))
             var.children.append((1 / (np.cos(var.value) ** 2), z)) # weight = dz/dvar = 1/(np.cos(var.value)^2)
