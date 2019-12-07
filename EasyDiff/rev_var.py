@@ -895,6 +895,20 @@ if __name__ == "__main__":
     
     @staticmethod
     def arcsin(var):
+    """ returns a Rev_Var as the result of var.arcsin()
+
+        INPUT
+        =======
+        var: a Rev_Var object or a real number
+        
+        RETURNS
+        =======
+        Rev_Var object: a new Rev_ Var object with new value and children
+        
+        EXAMPLES
+        =======
+        """
+        
         try:
             z = Rev_Var(np.arcsin(var.value))
             var.children.append((1 / ((1 - var.val ** 2) ** 0.5), z)) # weight = dz/dvar
@@ -902,8 +916,23 @@ if __name__ == "__main__":
         except:
             return np.arcsin(var)
 
+
     @staticmethod
     def arccos(var):
+        """ returns a Rev_Var as the result of var.arccos()
+
+        INPUT
+        =======
+        var: a Rev_Var object or a real number
+        
+        RETURNS
+        =======
+        Rev_Var object: a new Rev_ Var object with new value and children
+        
+        EXAMPLES
+        =======
+        """
+        
         try:
             z = Rev_Var(np.arccos(var.value))
             var.children.append((-1 / ((1 - var.val ** 2) ** 0.5), z)) # weight = dz/dvar
@@ -913,6 +942,20 @@ if __name__ == "__main__":
     
     @staticmethod
     def arctan(var):
+        """ returns a Rev_Var as the result of var.arctan()
+
+        INPUT
+        =======
+        var: a Rev_Var object or a real number
+        
+        RETURNS
+        =======
+        Rev_Var object: a new Rev_ Var object with new value and children
+        
+        EXAMPLES
+        =======
+        """
+    
         try:
             z = Rev_Var(np.arctan(var.value))
             var.children.append((1 / (1 + var.val ** 2), z)) # weight = dz/dvar
