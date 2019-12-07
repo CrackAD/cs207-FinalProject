@@ -2,10 +2,16 @@ import sys, os
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../')
 from EasyDiff.var import Var
+from EasyDiff.rev_var import Rev_Var
 import numpy as np
+from enum import Enum
+
+class AD_Mode:
+    FORWARD = 0
+    REVERSE = 1
 
 class AD():
-    def __init__(self, vals, ders):
+    def __init__(self, vals, ders, mode):
         """
         init the AD class
         INPUT
@@ -24,17 +30,23 @@ class AD():
         >>> print(vars(ad.vars[0]), vars(ad.vars[1]))
         {'val': 2, 'der': array([1, 0])} {'val': 2, 'der': array([0, 1])}
         """
-        assert(len(vals) == len(ders))
+        self.mode = mode
+        if mode == AD_Mode.FORWARD:
+            assert(len(vals) == len(ders))
 
-        self.vars = []
-        dimen = len(vals)
-        cnt = 0
-        for val, der in zip(vals, ders):
-            der_list = np.array([0 for i in range(dimen)])
-            der_list[cnt] = der
-            self.vars.append(Var(val, der_list))
-            cnt += 1
-
+            self.vars = []
+            dimen = len(vals)
+            cnt = 0
+            for val, der in zip(vals, ders):
+                der_list = np.array([0 for i in range(dimen)])
+                der_list[cnt] = der
+                self.vars.append(Var(val, der_list))
+                cnt += 1
+        else:
+            self.vars = []
+            for val in vals:
+                self.vars.append(Rev_Var(val))
+            
     def auto_diff(self, func):
         """
         Passing a function to a AD object, and return the final Var object with val and der.
@@ -58,7 +70,13 @@ class AD():
         >>> print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
         Var.log(x) ** 2: {'val': 0.4804530139182014, 'der': array([0.69314718])}
         """
-        return func(*self.vars)
+        if self.mode == AD_Mode.FORWARD:
+            return func(*self.vars)
+        else:
+            z = func(*self.vars)
+            z.grad_value = 1.0
+            res = list(map(lambda x: x.grad(), self.vars))
+            return Var(z.value, np.array(res)) # provide a unify interface
 
     def jac_matrix(self, funcs):
         pass
@@ -88,23 +106,28 @@ class AD():
             res_der = self.auto_diff(func).der
             for j in range(len(self.vars)):
                 res[i][j] = res_der[j]
-        return res       
+        return res
 
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=True)
 
+    f1 = lambda x, y: Var.log(x) ** Var.sin(y)
+    ad = AD(np.array([2, 2]), np.array([1, 1]), AD_Mode.FORWARD)
+    print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
 
-    # f1 = lambda x, y: Var.log(x) ** Var.sin(y)
-    # ad = AD(np.array([2, 2]), np.array([1, 1]))
-    # print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
 
-    # f1 = lambda x: Var.log(x) ** 2
-    # ad = AD(np.array([2]), np.array([1]))
-    # print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
+    f1 = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
+    ad = AD(np.array([2, 2]), np.array([1, 1]), AD_Mode.REVERSE)
+    print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
 
-    # f1 = lambda x, y: Var.log(x) ** Var.sin(y)
-    # f2 = lambda x, y: Var.sqrt(x) / y
-    # ad = AD(np.array([4.12, 5.13]), np.array([1, 1]))
-    # print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
+
+    f1 = lambda x: Var.log(x) ** 2
+    ad = AD(np.array([2]), np.array([1]), AD_Mode.FORWARD)
+    print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
+
+    f1 = lambda x, y: Var.log(x) ** Var.sin(y)
+    f2 = lambda x, y: Var.sqrt(x) / y
+    ad = AD(np.array([4.12, 5.13]), np.array([1, 1]), AD_Mode.FORWARD)
+    print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
 
