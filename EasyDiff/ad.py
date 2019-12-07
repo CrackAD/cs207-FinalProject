@@ -109,22 +109,27 @@ class AD():
         return res
 
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=True)
+    # import doctest
+    # doctest.testmod(verbose=True)
 
     f1 = lambda x, y: Var.log(x) ** Var.sin(y)
-    ad = AD(np.array([2, 2]), np.array([1, 1]), AD_Mode.FORWARD)
+    ad = AD(np.array([5, 1]), np.array([1, 1]), AD_Mode.FORWARD)
     print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
 
 
     f1 = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
-    ad = AD(np.array([2, 2]), np.array([1, 1]), AD_Mode.REVERSE)
+    ad = AD(np.array([5, 1]), np.array([1, 1]), AD_Mode.REVERSE)
     print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
 
 
     f1 = lambda x: Var.log(x) ** 2
     ad = AD(np.array([2]), np.array([1]), AD_Mode.FORWARD)
     print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
+
+    f1 = lambda x: Rev_Var.log(x) ** 2
+    ad = AD(np.array([2]), np.array([1]), AD_Mode.REVERSE)
+    print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
+
 
     f1 = lambda x, y: Var.log(x) ** Var.sin(y)
     f2 = lambda x, y: Var.sqrt(x) / y
