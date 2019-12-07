@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-class Var():
+class Rev_Var():
     '''
     This class defines a multivariate reverse mode node
     '''
@@ -66,12 +66,12 @@ class Var():
         
         """
         try: # two Var objects
-            z = Var(self.value + other.value)
+            z = Rev_Var(self.value + other.value)
             self.children.append((1.0, z)) # weight = dz/dself = 1
             other.children.append((1.0, z)) # weight = dz/dother = 1
             return z
         except AttributeError: # Var + real number
-            z = Var(self.value + other)
+            z = Rev_Var(self.value + other)
             self.children.append((1.0, z))
             return z
 
@@ -110,12 +110,12 @@ class Var():
         
         """
         try: # two Var objects
-            z = Var(self.value * other.value)
+            z = Rev_Var(self.value * other.value)
             self.children.append((other.value, z)) # weight = dz/dself = other.value
             other.children.append((self.value, z)) # weight = dz/dother = self.value
             return z
         except AttributeError: # Var * real number
-            z = Var(self.value * other)
+            z = Rev_Var(self.value * other)
             self.children.append((other, z))
             return z
 
@@ -154,12 +154,12 @@ class Var():
         
         """
         try: # two Var objects
-            z = Var(self.value - other.value)
+            z = Rev_Var(self.value - other.value)
             self.children.append((1.0, z)) # weight = dz/dself = 1
             other.children.append((-1.0, z)) # weight = dz/dother = -1
             return z
         except AttributeError: # Var - real number
-            z = Var(self.value - other)
+            z = Rev_Var(self.value - other)
             self.children.append((1.0, z))
             return z
 
@@ -199,12 +199,12 @@ class Var():
         """
         try: # two Var objects
             val = self.value**other.value
-            z = Var(val)
+            z = Rev_Var(val)
             self.children.append((other.value*(self.value **(other.value - 1)), z)) # weight = dz/dself
             other.children.append(val*np.log(self.value), z)
             return z
         except AttributeError: # Var ** real number
-            z = Var(self.value ** other)
+            z = Rev_Var(self.value ** other)
             self.children.append((other*(self.value**(other-1)), z))
             return z
    
@@ -225,7 +225,7 @@ class Var():
         
         """
         # the only scenario using this is when other is a real number and self is a Var object
-        z = Var(other **self.value)
+        z = Rev_Var(other **self.value)
         self.children.append(((other**self.value) * np.log(other), z))
         return z
 
@@ -280,7 +280,7 @@ class Var():
         =======
         
         """
-        ans= Var(-self.value)
+        ans= Rev_Var(-self.value)
         ans.children = [(-1, self)]
         if self.grad_value:
             ans.grad_value = -self.grad_value
@@ -371,7 +371,7 @@ class Var():
     
         """
         try: # a Var object
-            z = Var(np.log(var.value))
+            z = Rev_Var(np.log(var.value))
             var.children.append((1/ var.value, z))
             return z
         except AttributeError: # a real number
@@ -394,7 +394,7 @@ class Var():
         
         """
         try: # a Var object
-            z = Var(np.log(var.value) / np.log(k))
+            z = Rev_Var(np.log(var.value) / np.log(k))
             var.children.append((1/ (var.value*np.log(k)), z))
             return z
         except AttributeError: # a real number
@@ -417,12 +417,50 @@ class Var():
 
         """
         try:
-            z = Var(np.exp(var.value))
+            z = Rev_Var(np.exp(var.value))
             var.children.append((np.exp(var.value), z))
             return z
-        except AttributeError:
+        except AttributeError: # two real numbers
             return np.exp(var)
+    
+    @staticmethod
+    def expk(k, var): #k^(var)
+        """ returns a Var as the result of var.expk()
 
+        INPUT
+        =======
+        var: a Var object or a real number
+        k: the base of the exponential
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+        """
+        try:
+            z = Rev_Var(k**var.value)
+            var.children.append((k**var.value * np.log(k), z))
+            return z
+        except AttributeError: # two real numbers
+            return k**var
+
+    @staticmethod
+    def sinh(var):
+        """ returns a Var as the result of var.sinh()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+        """
+        try:
+            z = Rev_Var((np.exp(var.value) - np.exp(-var.value)) / 2)
+            var.children.append((np.cos(var.value), z)) # weight = dz/dvar = (e^x - e^(-x)) / 2
+            return z
+        except:
+            return np.sin(var)
     
     @staticmethod
     def sqrt(var):
@@ -441,7 +479,7 @@ class Var():
         
         """
         try:
-            z = Var(np.sqrt(var.value))
+            z = Rev_Var(np.sqrt(var.value))
             var.children.append((1/2 * (var.value**(-1/2)), z))
             return z
         except AttributeError:
@@ -450,7 +488,7 @@ class Var():
     @staticmethod
     def sin(var):
         try:
-            z = Var(np.sin(var.value))
+            z = Rev_Var(np.sin(var.value))
             var.children.append((np.cos(var.value), z)) # weight = dz/dvar = cos(var.value)
             return z
         except:
@@ -459,7 +497,7 @@ class Var():
     @staticmethod
     def cos(var):
         try:
-            z = Var(np.cos(var.value))
+            z = Rev_Var(np.cos(var.value))
             var.children.append((-np.sin(var.value), z)) # weight = dz/dvar = -sin(var.value)
             return z
         except:
@@ -468,7 +506,7 @@ class Var():
     @staticmethod
     def tan(var):
         try:
-            z = Var(np.tan(var.value))
+            z = Rev_Var(np.tan(var.value))
             var.children.append((1 / (np.cos(var.value) ** 2), z)) # weight = dz/dvar = 1/(np.cos(var.value)^2)
             return z
         except:
@@ -489,6 +527,11 @@ if __name__ == "__main__":
     assert y.grad() == pytest.approx(x.value)
 '''
 
+
+y = Rev_Var(3.0)
+z = Rev_Var.expk(4.0, y)
+z.grad_value = 1
+print(y.grad(), 4**3*np.log(4))
 
 '''
 # pow
