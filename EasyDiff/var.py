@@ -735,6 +735,84 @@ class Var():
         except AttributeError:
             return np.tan(var)
 
+    @staticmethod
+    def arcsin(var):
+        """ returns a Var as the result of var.arcsin()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new val and ders
+        
+        EXAMPLES
+        =======
+        >>> x = Var(0.5, np.array([1,0])) 
+        >>> z1 = Var.arcsin(x)
+        >>> print('arcsin(x): {}'.format(vars(z1)))
+        arcsin(x): {'val': 0.5235987755982988, 'der': array([1.15470054, 0.        ])}
+        """
+        try:
+            val = np.arcsin(var.val)
+            der = np.array(list(map(lambda x: 1 / ((1 - var.val ** 2) ** 0.5) * x, var.der)))
+            return Var(val, der)
+        except AttributeError:
+            return np.arcsin(var)
+
+    @staticmethod
+    def arccos(var):
+        """ returns a Var as the result of var.cos()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new val and ders
+        
+        EXAMPLES
+        =======
+        >>> x = Var(0.5, np.array([1,0])) 
+        >>> z1 = Var.arccos(x)
+        >>> print('arccos(x): {}'.format(vars(z1)))
+        arccos(x): {'val': 1.0471975511965976, 'der': array([-1.15470054, -0.        ])}
+        """
+        try:
+            val = np.arccos(var.val)
+            der = np.array(list(map(lambda x: -1 / ((1 - var.val ** 2) ** 0.5) * x, var.der)))
+            return Var(val, der)
+        except AttributeError:
+            return np.arccos(var)
+
+    @staticmethod
+    def arctan(var):
+        """ returns a Var as the result of var.arctan()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new val and ders
+        
+        EXAMPLES
+        =======
+        >>> x = Var(3, np.array([1,0])) 
+        >>> z1 = Var.arctan(x)
+        >>> print('arctan(x): {}'.format(vars(z1)))
+        arctan(x): {'val': 1.2490457723982544, 'der': array([0.1, 0. ])}
+        """
+        try:
+            val = np.arctan(var.val)
+            der = np.array(list(map(lambda x: 1 / (1 + var.val ** 2) * x, var.der)))
+            return Var(val, der)
+        except AttributeError:
+            return np.arctan(var)
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=True)
@@ -834,4 +912,17 @@ if __name__ == "__main__":
     # # tan
     # z1 = Var.tan(x)
     # print('tan(x): {}'.format(vars(z1)))
+    
+
+    # x = Var(0.5, np.array([1,0])) 
+    # z1 = Var.arcsin(x)
+    # print('arcsin(x): {}'.format(vars(z1)))
+
+    # x = Var(0.5, np.array([1,0])) 
+    # z1 = Var.arccos(x)
+    # print('arccos(x): {}'.format(vars(z1)))
+    
+    # x = Var(3, np.array([1,0])) 
+    # z1 = Var.arctan(x)
+    # print('arctan(x): {}'.format(vars(z1)))
     
