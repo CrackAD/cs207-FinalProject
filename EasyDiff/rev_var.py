@@ -342,7 +342,7 @@ class Rev_Var():
             return np.exp(var)
     
     @staticmethod
-    def expk(k, var): #k^(var)
+    def expk(var,k): #k^(var)
         """ returns a Var as the result of k ** (var)
 
         INPUT
@@ -357,7 +357,7 @@ class Rev_Var():
         EXAMPLES
         =======
         >>> x = Rev_Var(3.0)
-        >>> z = Rev_Var.expk(2, x)
+        >>> z = Rev_Var.expk(x, 2)
         >>> z.grad_value = 1
         >>> x.grad() == pytest.approx(2**3*np.log(2))
         True
