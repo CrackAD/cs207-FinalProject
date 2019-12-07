@@ -31,7 +31,7 @@ class AD():
         {'val': 2, 'der': array([1, 0])} {'val': 2, 'der': array([0, 1])}
         """
         self.mode = mode
-        if mode == AD_Mode.FORWARD:
+        if self.mode == AD_Mode.FORWARD:
             assert(len(vals) == len(ders))
 
             self.vars = []
@@ -43,10 +43,17 @@ class AD():
                 self.vars.append(Var(val, der_list))
                 cnt += 1
         else:
+            self.vals = vals
             self.vars = []
-            for val in vals:
+            for val in self.vals:
                 self.vars.append(Rev_Var(val))
             
+    def clear(self):
+        if self.mode == AD_Mode.REVERSE:
+            self.vars = []
+            for val in self.vals:
+                self.vars.append(Rev_Var(val))
+
     def auto_diff(self, func):
         """
         Passing a function to a AD object, and return the final Var object with val and der.
@@ -73,6 +80,7 @@ class AD():
         if self.mode == AD_Mode.FORWARD:
             return func(*self.vars)
         else:
+            self.clear()
             z = func(*self.vars)
             z.grad_value = 1.0
             res = list(map(lambda x: x.grad(), self.vars))
@@ -103,6 +111,8 @@ class AD():
         """
         res = np.zeros(shape=(len(funcs), len(self.vars)))
         for i, func in enumerate(funcs):
+            if self.mode == AD_Mode.REVERSE:
+                self.clear()
             res_der = self.auto_diff(func).der
             for j in range(len(self.vars)):
                 res[i][j] = res_der[j]
@@ -112,14 +122,15 @@ if __name__ == "__main__":
     # import doctest
     # doctest.testmod(verbose=True)
 
+
     f1 = lambda x, y: Var.log(x) ** Var.sin(y)
     ad = AD(np.array([5, 1]), np.array([1, 1]), AD_Mode.FORWARD)
     print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
 
-
     f1 = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
     ad = AD(np.array([5, 1]), np.array([1, 1]), AD_Mode.REVERSE)
     print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
+
 
 
     f1 = lambda x: Var.log(x) ** 2
@@ -131,8 +142,14 @@ if __name__ == "__main__":
     print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
 
 
+
     f1 = lambda x, y: Var.log(x) ** Var.sin(y)
     f2 = lambda x, y: Var.sqrt(x) / y
     ad = AD(np.array([4.12, 5.13]), np.array([1, 1]), AD_Mode.FORWARD)
+    print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
+
+    f1 = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
+    f2 = lambda x, y: Rev_Var.sqrt(x) / y
+    ad = AD(np.array([4.12, 5.13]), np.array([1, 1]), AD_Mode.REVERSE)
     print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
 
