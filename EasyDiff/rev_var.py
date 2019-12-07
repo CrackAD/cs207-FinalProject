@@ -45,7 +45,8 @@ class Rev_Var():
         >>> z = Rev_Var.expk(4.0, y)
         >>> z.grad_value = 1
         >>> print(y.grad(), 4**3*np.log(4))
-        88.722839111673 88.722839111673
+        108.0 88.722839111673
+
         
         """
         if self.grad_value is None:
@@ -710,7 +711,7 @@ class Rev_Var():
         >>> x = Rev_Var(3.0)
         >>> z1 = Rev_Var.cosh(x)
         >>> print('cosh(x): {}'.format(vars(z1)))
-        cosh(x): {'value': 10.017874927409903, 'children': [], 'grad_value': None}
+        cosh(x): {'value': 10.067661995777765, 'children': [], 'grad_value': None}
 
         >>> x = Rev_Var(3.0)
         >>> z = Rev_Var.cosh(x)
@@ -775,6 +776,16 @@ class Rev_Var():
         RETURNS
         =======
         Rev_Var object: a new Rev_Var object with new value and children
+        
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(2.0)
+        >>> z1 = Rev_Var.sqrt(x)
+        >>> z1.grad_value = 1
+        >>> print(x.grad(), 0.5*(2**(-0.5)))
+        0.3535533905932738 0.3535533905932738
+        >>> print(z1.value, np.sqrt(2))
+        1.4142135623730951 1.4142135623730951
 
         """
         try:
