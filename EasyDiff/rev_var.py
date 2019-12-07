@@ -324,7 +324,7 @@ class Rev_Var():
     
     @staticmethod
     def exp(var): #e^(var)
-        """ returns a Var as the result of var.exp()
+        """ returns a Var as the result of Var.exp(var)
 
         INPUT
         =======
@@ -343,7 +343,7 @@ class Rev_Var():
     
     @staticmethod
     def expk(k, var): #k^(var)
-        """ returns a Var as the result of var.expk()
+        """ returns a Var as the result of k ** (var)
 
         INPUT
         =======
@@ -353,6 +353,16 @@ class Rev_Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+        
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> z = Rev_Var.expk(2, x)
+        >>> z.grad_value = 1
+        >>> x.grad() == pytest.approx(2**3*np.log(2))
+        True
+        >>> z.value == pytest.approx(2**3)
+        True
         """
         try:
             z = Rev_Var(k**var.value)
@@ -360,6 +370,35 @@ class Rev_Var():
             return z
         except AttributeError: # two real numbers
             return k**var
+
+    @staticmethod
+    def logistic(var):
+        """ returns a Var as the result of 1 / (1 + e^(-var))
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> z = Rev_Var.logistic(x)
+        >>> z.grad_value = 1
+        >>> x.grad() == pytest.approx(np.exp(3) / ((1 + np.exp(3))**2))
+        True
+        >>> z.value == pytest.approx(1 / (1+np.exp(-3)))
+        True
+        """
+        try:
+            z = Rev_Var(1 / (1 + np.exp(-var.value))) # logistic(x) = 1 / (1 + e^(-x))
+            var.children.append((np.exp(var.value) / ((1 + np.exp(var.value))**2), z)) # weight = dz/dvar = e^x/ ((1 + e^x)**2)
+            return z
+        except AttributeError: # two real numbers
+            return 1 / (1 + np.exp(-var))
 
     @staticmethod
     def sinh(var):
@@ -372,10 +411,20 @@ class Rev_Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> z = Rev_Var.sinh(x)
+        >>> z.grad_value = 1
+        >>> x.grad() == pytest.approx((np.exp(3)+np.exp(-3)) / 2)
+        True
+        >>> z.value == pytest.approx((np.exp(3)-np.exp(-3)) / 2)
+        True
         """
         try:
-            z = Rev_Var((np.exp(var.value) - np.exp(-var.value)) / 2)
-            var.children.append(((np.exp(var.value) - np.exp(-var.value)) / 2, z)) # weight = dz/dvar = (e^x + e^(-x)) / 2
+            z = Rev_Var((np.exp(var.value) - np.exp(-var.value)) / 2) # sinh(x) = (e^x - e^(-x)) / 2
+            var.children.append(((np.exp(var.value)+np.exp(-var.value)) / 2, z)) # weight = dz/dvar = (e^x + e^(-x)) / 2
             return z
         except: # two real numbers
             return (np.exp(var) - np.exp(-var)) / 2
@@ -391,13 +440,50 @@ class Rev_Var():
         RETURNS
         =======
         Var object: a new Var object with new value and children
+
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> z = Rev_Var.cosh(x)
+        >>> z.grad_value = 1
+        >>> x.grad() == pytest.approx((np.exp(3)-np.exp(-3)) / 2)
+        True
+        >>> z.value == pytest.approx((np.exp(3)+np.exp(-3)) / 2)
+        True
         """
         try:
-            z = Rev_Var((np.exp(var.value) - np.exp(-var.value)) / 2)
-            var.children.append(((np.exp(var.value) - np.exp(-var.value)) / 2, z)) # weight = dz/dvar = (e^x + e^(-x)) / 2
+            z = Rev_Var((np.exp(var.value) + np.exp(-var.value)) / 2) # cosh(x) = (e^x + e^(-x)) / 2
+            var.children.append(((np.exp(var.value) - np.exp(-var.value)) / 2, z)) # weight = dz/dvar = (e^x - e^(-x)) / 2
             return z
         except: # two real numbers
-            return (np.exp(var) - np.exp(-var)) / 2
+            return (np.exp(var) + np.exp(-var)) / 2
+    
+    @staticmethod
+    def tanh(var):
+        """ returns a Var as the result of var.cosh()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+
+        EXAMPLES
+        =======
+        >>> x = Rev_Var(3.0)
+        >>> z = Rev_Var.tanh(x)
+        >>> z.grad_value = 1
+        >>> x.grad() == pytest.approx(4 / (np.exp(6) + np.exp(-6) + 2))
+        True
+        >>> z.value == pytest.approx((np.exp(3)-np.exp(-3)) / (np.exp(3)+np.exp(-3)))
+        True
+        """
+        try:
+            return Rev_Var.sinh(var) / Rev_Var.cosh(var)
+        except: # two real numbers
+            return (np.exp(var) - np.exp(-var)) / (np.exp(var) + np.exp(-var))
     
     @staticmethod
     def sqrt(var):
@@ -445,11 +531,11 @@ class Rev_Var():
         except:
             return np.tan(var)
     
-'''
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=True)
-
+    '''
     x = Var(0.5)
     y = Var(4.2)
     z = x * y + Var.sin(x)
@@ -458,7 +544,7 @@ if __name__ == "__main__":
     assert z.value == pytest.approx(2.579425538604203)
     assert x.grad() == pytest.approx(y.value + np.cos(x.value))
     assert y.grad() == pytest.approx(x.value)
-'''
+    '''
 
 
 '''
