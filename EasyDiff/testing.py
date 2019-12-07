@@ -8,6 +8,10 @@ import numpy as np
 import pytest
 from rev_var import Rev_Var
 
+#y = Rev_Var(3.0)
+#z = Rev_Var.expk(4.0, y)
+#z.grad_value = 1
+#print(y.grad(), 4**3*np.log(4))
 
 #a = Rev_Var(1)
 #print(a.value, a.children, a.grad_value)
@@ -40,6 +44,7 @@ from rev_var import Rev_Var
 #z1 = Rev_Var.sqrt(x)
 #z1.grad_value = 1
 #print(x.grad(), 0.5*(2**(-0.5)))
+#
 #print(z1.value, np.sqrt(2))
 
 
@@ -287,10 +292,30 @@ print(x.grad(), 1/(2*np.log(3)))
 #print('cos(y): {}'.format(vars(z2)))
 
 
-x = Rev_Var(3.0)
-y = Rev_Var(2.0)
-z1 = Rev_Var.tan(x)
-z2 = Rev_Var.tan(y)
-print('tan(x): {}'.format(vars(z1)))
+#x = Rev_Var(3.0)
+#y = Rev_Var(2.0)
+#z1 = Rev_Var.tan(x)
+#z2 = Rev_Var.tan(y)
+#print('tan(x): {}'.format(vars(z1)))
+#
+#print('tan(y): {}'.format(vars(z2)))
 
-print('tan(y): {}'.format(vars(z2)))
+#x = Rev_Var(3.0)
+#z1 = Rev_Var.cosh(x)
+#print('cosh(x): {}'.format(vars(z1)))
+#cosh(x): {'value': 10.067661995777765, 'children': [], 'grad_value': None}
+#
+#x = Rev_Var(3.0)
+#z = Rev_Var.cosh(x)
+#z.grad_value = 1
+#x.grad() == pytest.approx((np.exp(3)-np.exp(-3)) / 2)
+#
+#z.value == pytest.approx((np.exp(3)+np.exp(-3)) / 2)
+
+
+x = Rev_Var(3.0)
+z = Rev_Var.arcsin(x)
+z.grad_value = 1
+x.grad() == pytest.approx((np.exp(3)-np.exp(-3)) / 2)
+
+z.value == pytest.approx((np.exp(3)+np.exp(-3)) / 2)

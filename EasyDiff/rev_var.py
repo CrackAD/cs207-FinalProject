@@ -895,7 +895,7 @@ if __name__ == "__main__":
     
     @staticmethod
     def arcsin(var):
-    """ returns a Rev_Var as the result of var.arcsin()
+        """ returns a Rev_Var as the result of var.arcsin()
 
         INPUT
         =======
