@@ -445,6 +445,33 @@ class Rev_Var():
         except:
             return np.tan(var)
     
+    @staticmethod
+    def arcsin(var):
+        try:
+            z = Rev_Var(np.arcsin(var.value))
+            var.children.append((1 / ((1 - var.val ** 2) ** 0.5), z)) # weight = dz/dvar
+            return z
+        except:
+            return np.arcsin(var)
+
+    @staticmethod
+    def arccos(var):
+        try:
+            z = Rev_Var(np.arccos(var.value))
+            var.children.append((-1 / ((1 - var.val ** 2) ** 0.5), z)) # weight = dz/dvar
+            return z
+        except:
+            return np.arccos(var)
+    
+    @staticmethod
+    def arctan(var):
+        try:
+            z = Rev_Var(np.arctan(var.value))
+            var.children.append((1 / (1 + var.val ** 2), z)) # weight = dz/dvar
+            return z
+        except:
+            return np.arctan(var)
+    
 if __name__ == "__main__":
     # import doctest
     # doctest.testmod(verbose=True)
