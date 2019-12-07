@@ -17,7 +17,7 @@ class Rev_Var():
         
         EXAMPLES
         =======
-        >>> a = Var(1)
+        >>> a = Rev_Var(1)
         >>> print(a.value, a.children, a.grad_value)
         1 [] None
         
@@ -39,10 +39,11 @@ class Rev_Var():
         
         EXAMPLES
         =======
-        >>> a = Var(1)
-        >>> print(Var.grad(a))
-        0
-        
+        >>> y = Rev_Var(3.0)
+        >>> z = Rev_Var.expk(4.0, y)
+        >>> z.grad_value = 1
+        >>> print(y.grad(), 4**3*np.log(4))
+        88.722839111673 88.722839111673
         """
         if self.grad_value is None:
             self.grad_value = sum(weight * var.grad()
@@ -63,6 +64,7 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        
         
         """
         try: # two Var objects
@@ -222,6 +224,15 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> z3 = 2**y
+        >>> z3.grad_value = 1
+        >>> print(vars(z3))
+        {'value': 8.0, 'children': [], 'grad_value': 1}
+        >>> print(y.grad(), 2**3*np.log(2))
+        88.722839111673 5.545177444479562
+        >>> print(vars(y))
+        {'value': 3.0, 'children': [(88.722839111673, <rev_var.Rev_Var object at 0x000001D789787588>), (5.545177444479562, <rev_var.Rev_Var object at 0x000001D7881EC240>), (5.545177444479562, <rev_var.Rev_Var object at 0x000001D7897BBDA0>), (5.545177444479562, <rev_var.Rev_Var object at 0x000001D7897BB908>), (5.545177444479562, <rev_var.Rev_Var object at 0x000001D7898307B8>), (5.545177444479562, <rev_var.Rev_Var object at 0x000001D7897BBAC8>), (5.545177444479562, <rev_var.Rev_Var object at 0x000001D7897BB390>), (5.545177444479562, <rev_var.Rev_Var object at 0x000001D7897BB630>), (5.545177444479562, <rev_var.Rev_Var object at 0x000001D7897BBBE0>)], 'grad_value': 88.722839111673}
+        
         
         """
         # the only scenario using this is when other is a real number and self is a Var object
@@ -476,6 +487,13 @@ class Rev_Var():
         
         EXAMPLES
         =======
+        >>> x = Rev_Var(2.0)
+        >>> z1 = Rev_Var.sqrt(x)
+        >>> z1.grad_value = 1
+        >>> print(x.grad(), 0.5*(2**(-0.5)))
+        0.3535533905932738 0.3535533905932738
+        >>> print(z1.value, np.sqrt(2))
+        1.4142135623730951 1.4142135623730951
         
         """
         try:
@@ -511,6 +529,10 @@ class Rev_Var():
             return z
         except:
             return np.tan(var)
+        
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
     
 '''
 if __name__ == "__main__":
@@ -528,10 +550,10 @@ if __name__ == "__main__":
 '''
 
 
-y = Rev_Var(3.0)
-z = Rev_Var.expk(4.0, y)
-z.grad_value = 1
-print(y.grad(), 4**3*np.log(4))
+#y = Rev_Var(3.0)
+#z = Rev_Var.expk(4.0, y)
+#z.grad_value = 1
+#print(y.grad(), 4**3*np.log(4))
 
 '''
 # pow
