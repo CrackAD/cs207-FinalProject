@@ -159,7 +159,7 @@ class Rev_Var():
             val = self.value**other.value
             z = Rev_Var(val)
             self.children.append((other.value*(self.value **(other.value - 1)), z)) # weight = dz/dself
-            other.children.append(val*np.log(self.value), z)
+            other.children.append((val*np.log(self.value), z))
             return z
         except AttributeError: # Var ** real number
             z = Rev_Var(self.value ** other)
@@ -375,10 +375,29 @@ class Rev_Var():
         """
         try:
             z = Rev_Var((np.exp(var.value) - np.exp(-var.value)) / 2)
-            var.children.append((np.cos(var.value), z)) # weight = dz/dvar = (e^x - e^(-x)) / 2
+            var.children.append(((np.exp(var.value) - np.exp(-var.value)) / 2, z)) # weight = dz/dvar = (e^x + e^(-x)) / 2
             return z
-        except:
-            return np.sin(var)
+        except: # two real numbers
+            return (np.exp(var) - np.exp(-var)) / 2
+
+    @staticmethod
+    def cosh(var):
+        """ returns a Var as the result of var.cosh()
+
+        INPUT
+        =======
+        var: a Var object or a real number
+        
+        RETURNS
+        =======
+        Var object: a new Var object with new value and children
+        """
+        try:
+            z = Rev_Var((np.exp(var.value) - np.exp(-var.value)) / 2)
+            var.children.append(((np.exp(var.value) - np.exp(-var.value)) / 2, z)) # weight = dz/dvar = (e^x + e^(-x)) / 2
+            return z
+        except: # two real numbers
+            return (np.exp(var) - np.exp(-var)) / 2
     
     @staticmethod
     def sqrt(var):
@@ -442,12 +461,20 @@ if __name__ == "__main__":
 '''
 
 
+'''
+# sinh
+y = Rev_Var(3.0)
+z = Rev_Var.sinh(y)
+z.grad_value = 1
+print(y.grad(), (np.exp(3) + np.exp(-3))/2)
+
+# expk
 y = Rev_Var(3.0)
 z = Rev_Var.expk(4.0, y)
 z.grad_value = 1
 print(y.grad(), 4**3*np.log(4))
 
-'''
+
 # pow
 z1 = x**y
 # set final derivative df/dx_final = 1
