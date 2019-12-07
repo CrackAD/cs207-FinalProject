@@ -13,130 +13,204 @@ def test_rev_grad():
     z.grad_value = 1.0
 
     assert z.value == pytest.approx(2.579425538604203)
-    assert x.grad() == pytest.approx(y.value + np.cos(x.value))
-    assert y.grad() == pytest.approx(x.value)
+    assert x.grad() == pytest.approx(4.2 + np.cos(x.value))
+    assert y.grad() == pytest.approx(0.5)
 
 def test_rev_add():
     x = Rev_Var(0.5)
     y = Rev_Var(4.2)
-    assert x + y == Rev_Var(x.value+y.value)
+    z = x+y
+    z.grad_value = 1.0
+    assert z.value == 4.7
+    assert y.grad() == 1
 
 def test_rev_real_add():
     x = Rev_Var(0.5)
     y = 4.2
-    assert x + y == Rev_Var(x.value+4.2)
+    z = x+y
+    assert z.value == x.value + 4.2
 
 def test_rev_mul():
     x = Rev_Var(0.5)
     y = Rev_Var(4.2)
     z = x*y
+    z.grad_value = 1.0
+    assert z.value == 2.1
+    assert x.grad() == pytest.approx(y.value)
 
-    assert z == Rev_Var(0.5 * 4.2)
+def test_rev_rmul():
+	x = 3
+	y = Rev_Var(4.2)
+	z = x*y
+	assert z.value == pytest.approx(12.6)
+
+def test_rev_sub():
+    x = Rev_Var(0.5)
+    y = Rev_Var(4.2)
+    a = 3
+
+    z1 = y - x
+    z1.grad_value = 1.0
+    assert z1.value == 3.7
+    assert x.grad() == -1
+    assert y.grad() == 1
+
+    z2 = y - 3
+    assert z2.value == pytest.approx(1.2)
+
+def test_rev_rsub():
+    x = Rev_Var(0.5)
+    a = 3
+    z = a - x
+    assert z.value == pytest.approx(2.5)
+
+def test_rev_pow():
+    x1 = Rev_Var(0.5)
+    x2 = Rev_Var(0.5)
+    y = Rev_Var(4.2)
+    a = 3
+    z1 = x1 ** y
+    z1.grad_value = 1
+    z2 = x2**3
+    z2.grad_value = 1
+
+    assert z1.value == pytest.approx(0.05440941020600775)
+    assert x1.grad() == pytest.approx(0.4570390457304651)
+    assert y.grad() == pytest.approx(-0.03771372928022378)
+    assert z2.value == pytest.approx(0.125)
+    assert x2.grad() == pytest.approx(0.75)
 
 
-# def test_real_mul():
-# 	x = 3
-# 	y = Var(2, np.array([0,1]))
-# 	assert x*y == Var(6, np.array([0,3]))
+def test_rev_rpow():
+    x = Rev_Var(0.5)
+    a = 3
+    z = 3 ** x
+    z.grad_value = 1
+    assert z.value == pytest.approx(1.7320508075688772)
+    assert x.grad() == pytest.approx(1.902852301792692)
 
-# def test_var_sub():
-# 	x = Var(3, np.array([1,0]))
-# 	y = Var(2, np.array([0,1]))
-# 	assert x - y == Var(1, np.array([1,-1]))
+def test_truediv():
+    x = Rev_Var(0.5)
+    y = Rev_Var(4.2)
+    z = x/y
+    z.grad_value = 1.0
+    assert z.value == pytest.approx(0.11904761904761904)
+    assert x.grad() == pytest.approx(0.23809523809523808)
+    assert y.grad() == pytest.approx(-0.028344671201814057)
 
-# def test_real_sub():
-# 	x = 3
-# 	y = Var(2, np.array([0,1]))
-# 	assert x-y == Var(1, np.array([0,-1]))
+def test_rtruediv():
+	x = Rev_Var(0.5)
+	y = 5
+	z = x/y
+	z.grad_value = 1.0
+	assert z.value == 0.1
+	assert x.grad() == 0.2
 
-# def test_var_pow():
-# 	x = Var(3, np.array([1,0]))
-# 	y = Var(2, np.array([0,1]))
-# 	assert x**y == Var(9, np.array([pytest.approx(6.0),pytest.approx(9.8875106)]))
+def test_neg():
+	x = Rev_Var(0.5)
+	assert -x.value == -0.5
 
-# def test_real_pow():
-# 	x = Var(3, np.array([1,0]))
-# 	y = 2
-# 	assert x**y == Var(9, np.array([6, 0]))
-# 	assert y**x == Var(8, np.array([pytest.approx(5.54517744), pytest.approx(0.)]))
+def test_pos(): 
+	x = Rev_Var(0.5)
+	assert +x.value == x.value
 
-# def test_truediv():
-# 	x = Var(3, np.array([1,0]))
-# 	y = Var(2, np.array([0,1]))
-# 	assert x/y == Var(1.5, np.array([0.5, -0.75]))
+def test_equal():
+	x = Rev_Var(0.5)
+	z = Rev_Var(0.5)
+	y = 2
+	assert x==z
+	assert (x==y) == False
 
-# def test_rtruediv():
-# 	x = Var(3, np.array([1,0]))
-# 	y = 2
-# 	assert y/x == Var(pytest.approx(0.6666666666666666), np.array([pytest.approx(-0.22222222), pytest.approx(-0.)]))
+def test_notequal():
+	x = Rev_Var(0.5)
+	y = 2
+	z = Rev_Var(4)
+	assert x!=z
+	assert (x!=y) == True
 
-# def test_div():
-# 	x = Var(3, np.array([1,0]))
-# 	y = 2
-# 	assert x/y == Var(1.5, np.array([0.5, 0.]))
+def test_log():
+	x = Rev_Var(2.0)
+	z1 = Rev_Var.log(x)
+	z1.grad_value = 1
+	assert z1.value == pytest.approx(0.6931471805599453)
+	assert z1.value == np.log(2)
+	assert x.grad() == pytest.approx(0.5)
 
-# def test_neg():
-# 	x = Var(3, np.array([1,0]))
-# 	assert -x == Var(-3, np.array([-1,0]))
+def test_logk():
+	x = Rev_Var(2.0)
+	z2 = Rev_Var.logk(x, 3.0)
+	z2.grad_value = 1
+	assert z2.value == np.log(2) / np.log(3)
+	assert x.grad() == pytest.approx(0.45511961331341866)
 
-# def test_pos():
-# 	x = Var(3, np.array([1,0]))
-# 	assert +x == Var(3, np.array([1,0]))
+def test_exp():
+	x = Rev_Var(2.0)
+	z1 = Rev_Var.exp(x)
+	y = 5
+	z1.grad_value = 1
+	z2 = Rev_Var.exp(y)
+	assert z1.value == pytest.approx(7.38905609893065)
+	assert z2 == pytest.approx(148.4131591025766)
+	assert x.grad() == pytest.approx(7.38905609893065)
 
-# def test_equal():
-# 	x = Var(3, np.array([1,0]))
-# 	z = Var(3, np.array([1,0]))
-# 	y = 2
-# 	assert x==z
-# 	assert (x==y) == False
+def test_expk():
+	x = Rev_Var(2.0)
+	z = Rev_Var.expk(3.0,x)
+	z.grad_value = 1
+	assert z.value == pytest.approx(9.0)
+	assert x.grad() == pytest.approx(9.887510598012987)
 
-# def test_notequal():
-# 	x = Var(3, np.array([1,0]))
-# 	y = 2
-# 	z = Var(2, np.array([0,1]))
-# 	assert x!=z
-# 	assert (x!=y) == True
 
-# def test_log():
-# 	x = Var(3, np.array([1]))
-# 	y = 2
-# 	assert Var.log(x) == Var(pytest.approx(1.0986122886681098), np.array([pytest.approx(0.33333333)]))
-# 	assert Var.log(y) == np.log(y)
+def test_sqrt():
+	x = Rev_Var(2.0)
+	z1 = Rev_Var.sqrt(x)
+	z1.grad_value = 1
+	assert z1.value == pytest.approx(1.4142135623730951)
+	assert x.grad() == pytest.approx(0.3535533905932738)
 
-# def test_logk():
-# 	x = Var(3, np.array([1]))
-# 	y = 2
-# 	assert Var.logk(x,3.0) == Var(pytest.approx(1.0), np.array([pytest.approx(0.30341308)]))
-# 	assert Var.logk(y,3.0) == np.log(y)/ np.log(3.0)
+def test_sinh():
+	x = Rev_Var(2.0)
+	z = Rev_Var.sinh(x)
+	z.grad_value = 1
+	z2 = Rev_Var.sinh(2)
+	assert z.value == pytest.approx(3.626860407847019)
+	assert z2 == pytest.approx(3.626860407847019)
+	assert x.grad() == pytest.approx(3.626860407847019)
 
-# def test_exp():
-# 	x = Var(3, np.array([1]))
-# 	y = 2
-# 	assert Var.exp(x) == Var(pytest.approx(20.085536923187668), np.array([pytest.approx(20.08553692)]))
-# 	assert Var.exp(y) == np.exp(y)
+def test_cosh():
+	x = Rev_Var(2.0)
+	z = Rev_Var.cosh(x)
+	z.grad_value = 1
+	z3 = Rev_Var.cosh(2)
+	assert z.value == pytest.approx(3.626860407847019)
+	assert z3 == pytest.approx(3.626860407847019)
+	assert x.grad() == pytest.approx(3.626860407847019)
 
-# def test_sqrt():
-# 	x = Var(3, np.array([1]))
-# 	y = 2
-# 	assert Var.sqrt(x) == Var(pytest.approx(1.7320508075688772), np.array([pytest.approx(0.28867513)]))
-# 	assert Var.sqrt(y) == np.sqrt(y)
+def test_sin():
+	x = Rev_Var(2.0)
+	y = 2
+	z = Rev_Var.sin(x)
+	z.grad_value = 1
+	assert z.value == pytest.approx(0.9092974268256817)
+	assert x.grad() == pytest.approx(-0.4161468365471424)
+	assert Rev_Var.sin(y) == np.sin(y)
 
-# def test_sin():
-# 	x = Var(3, np.array([1]))
-# 	y = 2
-# 	assert Var.sin(x) == Var(pytest.approx(0.1411200080598672), np.array([pytest.approx(-0.9899925)]))
-# 	assert Var.sin(y) == np.sin(y)
+def test_cos():
+	x = Rev_Var(2.0)
+	y = 2
+	z = Rev_Var.cos(x)
+	z.grad_value = 1
+	assert z.value == pytest.approx(-0.4161468365471424)
+	assert x.grad() == pytest.approx(-0.9092974268256817)
+	assert Rev_Var.cos(y) == np.cos(y)
 
-# def test_cos():
-# 	x = Var(3, np.array([1]))
-# 	y = 2
-# 	assert Var.cos(x) == Var(pytest.approx(-0.9899924966004454), np.array([pytest.approx(-0.14112001)]))
-# 	assert Var.cos(y) == np.cos(y)
-
-# def test_tan():
-# 	x = Var(3, np.array([1]))
-# 	y = 2
-# 	assert Var.tan(x) == Var(pytest.approx(-0.1425465430742778), np.array([pytest.approx(1.02031952)]))
-# 	assert Var.tan(y) == np.tan(y)
+def test_tan():
+	x = Rev_Var(2.0)
+	y = 2
+	z = Rev_Var.tan(x)
+	z.grad_value = 1
+	assert z.value == pytest.approx(-2.185039863261519)
+	assert x.grad() == pytest.approx(5.774399204041917)
+	assert Rev_Var.tan(y) == np.tan(y)
 
 
