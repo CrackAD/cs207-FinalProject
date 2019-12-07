@@ -11,7 +11,7 @@ class AD_Mode:
     REVERSE = 1
 
 class AD():
-    def __init__(self, vals, ders, mode):
+    def __init__(self, vals, ders, mode = AD_Mode.FORWARD):
         """
         init the AD class
         INPUT
@@ -19,6 +19,7 @@ class AD():
         self: an AD class
         vals: a list of initial value for a list of variables
         ders: a list of initial derivative for a list of variables
+        mode: the mode for auto-diff, ie, FORWARD or REVERSE
         
         RETURNS
         =======
@@ -26,9 +27,12 @@ class AD():
         
         EXAMPLES
         =======
-        >>> ad = AD(np.array([2, 2]), np.array([1, 1]))
+        >>> ad = AD(np.array([2, 2]), np.array([1, 1]), AD_Mode.FORWARD)
         >>> print(vars(ad.vars[0]), vars(ad.vars[1]))
         {'val': 2, 'der': array([1, 0])} {'val': 2, 'der': array([0, 1])}
+        >>> ad = AD(np.array([2, 2]), np.array([1, 1]), AD_Mode.REVERSE)
+        >>> print(vars(ad.vars[0]), vars(ad.vars[1]))
+        {'value': 2, 'children': [], 'grad_value': None} {'value': 2, 'children': [], 'grad_value': None}
         """
         self.mode = mode
         if self.mode == AD_Mode.FORWARD:
@@ -69,13 +73,21 @@ class AD():
         EXAMPLES
         =======
         >>> f1 = lambda x, y: Var.log(x) ** Var.sin(y)
-        >>> ad = AD(np.array([2, 2]), np.array([1, 1]))
+        >>> ad = AD(np.array([2, 2]), np.array([1, 1]), AD_Mode.FORWARD)
         >>> print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
         Var.log(x) ** Var.sin(y): {'val': 0.7165772257590739, 'der': array([0.47001694, 0.10929465])}
         >>> f1 = lambda x: Var.log(x) ** 2
-        >>> ad = AD(np.array([2]), np.array([1]))
+        >>> ad = AD(np.array([2]), np.array([1]), AD_Mode.FORWARD)
         >>> print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
         Var.log(x) ** 2: {'val': 0.4804530139182014, 'der': array([0.69314718])}
+        >>> f1 = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
+        >>> ad = AD(np.array([2, 2]), np.array([1, 1]), AD_Mode.REVERSE)
+        >>> print("Rev_Var.log(x) ** Rev_Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
+        Rev_Var.log(x) ** Rev_Var.sin(y): {'val': 0.7165772257590739, 'der': array([0.47001694, 0.10929465])}
+        >>> f1 = lambda x: Rev_Var.log(x) ** 2
+        >>> ad = AD(np.array([2]), np.array([1]), AD_Mode.REVERSE)
+        >>> print("Rev_Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
+        Rev_Var.log(x) ** 2: {'val': 0.4804530139182014, 'der': array([0.69314718])}
         """
         if self.mode == AD_Mode.FORWARD:
             return func(*self.vars)
@@ -103,11 +115,18 @@ class AD():
         =======
         >>> f1 = lambda x, y: Var.log(x) ** Var.sin(y)
         >>> f2 = lambda x, y: Var.sqrt(x) / y
-        >>> ad = AD(np.array([4.12, 5.13]), np.array([1, 1]))
+        >>> ad = AD(np.array([4.12, 5.13]), np.array([1, 1]), AD_mode.FORWARD)
         >>> print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
         jac_matrix: 
         [[-0.11403015  0.10263124]
          [ 0.048018   -0.07712832]]
+        >>> f1 = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
+        >>> f2 = lambda x, y: Rev_Var.sqrt(x) / y
+        >>> ad = AD(np.array([4.12, 5.13]), np.array([1, 1]), AD_Mode.REVERSE)
+        >>> print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
+        jac_matrix: 
+        [[-0.11403015  0.10263124]
+        [ 0.048018   -0.07712832]]
         """
         res = np.zeros(shape=(len(funcs), len(self.vars)))
         for i, func in enumerate(funcs):
@@ -119,8 +138,8 @@ class AD():
         return res
 
 if __name__ == "__main__":
-    # import doctest
-    # doctest.testmod(verbose=True)
+    import doctest
+    doctest.testmod(verbose=True)
 
 
     f1 = lambda x, y: Var.log(x) ** Var.sin(y)
