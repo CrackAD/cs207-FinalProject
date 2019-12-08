@@ -102,6 +102,18 @@ def test_exp():
 	assert Var.exp(x) == Var(pytest.approx(20.085536923187668), np.array([pytest.approx(20.08553692)]))
 	assert Var.exp(y) == np.exp(y)
 
+def test_expk():
+	x = Var(3, np.array([1]))
+	y = 3
+	assert Var.expk(x,4) == Var(64, np.array([pytest.approx(88.72283911)]))
+	assert Var.expk(y,4) == 4**3
+
+def test_logistic():
+	x = Var(3, np.array([1]))
+	y = 3
+	assert Var.logistic(x) == Var(pytest.approx(0.9525741268224334), np.array([pytest.approx(0.04517666)]))
+	assert Var.logistic(y) == pytest.approx(0.9525741268224334)
+
 def test_sqrt():
 	x = Var(3, np.array([1]))
 	y = 2
@@ -113,6 +125,24 @@ def test_sin():
 	y = 2
 	assert Var.sin(x) == Var(pytest.approx(0.1411200080598672), np.array([pytest.approx(-0.9899925)]))
 	assert Var.sin(y) == np.sin(y)
+
+def test_sinh():
+	x = Var(0.5, np.array([1]))
+	y = 0.5
+	assert Var.sinh(x) == Var(pytest.approx(0.5210953054937474), np.array([pytest.approx(1.12762597)]))
+	assert Var.sinh(y) == (np.exp(y) - np.exp(-y)) / 2
+
+def test_cosh():
+	x = Var(0.5, np.array([1]))
+	y = 0.5
+	assert Var.cosh(x) == Var(pytest.approx(1.1276259652063807), np.array([pytest.approx(0.52109531)]))
+	assert Var.cosh(y) == (np.exp(y) + np.exp(-y)) / 2
+
+def test_tanh():
+	x = Var(0.5, np.array([1]))
+	y = 0.5
+	assert Var.tanh(x) == Var(pytest.approx(0.46211715726000985), np.array([pytest.approx(0.78644773)]))
+	assert Var.tanh(y) == (np.exp(y) - np.exp(-y)) / (np.exp(y) + np.exp(-y))
 
 def test_cos():
 	x = Var(3, np.array([1]))
@@ -126,4 +156,20 @@ def test_tan():
 	assert Var.tan(x) == Var(pytest.approx(-0.1425465430742778), np.array([pytest.approx(1.02031952)]))
 	assert Var.tan(y) == np.tan(y)
 
+def test_arcsin():
+	x = Var(0.5, np.array([1]))
+	y = 0.5
+	assert Var.arcsin(x) == Var(pytest.approx(0.5235987755982988), np.array([pytest.approx(1.15470054)]))
+	assert Var.arcsin(y) == np.arcsin(y)
 
+def test_arccos():
+	x = Var(0.5, np.array([1]))
+	y = 0.5
+	assert Var.arccos(x) == Var(pytest.approx(1.0471975511965976), np.array([pytest.approx(-1.15470054)]))
+	assert Var.arccos(y) == np.arccos(y)
+
+def test_arctan():
+	x = Var(0.5, np.array([1]))
+	y = 0.5
+	assert Var.arctan(x) == Var(pytest.approx(0.46364760900080615), np.array([pytest.approx(0.8)]))
+	assert Var.arctan(y) == np.arctan(y)
