@@ -559,138 +559,136 @@ class Rev_Var():
             return np.arctan(var)
     
 if __name__ == "__main__":
-    # import doctest
-    # doctest.testmod(verbose=True)
+    import doctest
+    doctest.testmod(verbose=True)
 
-    x = Rev_Var(0.5)
-    y = Rev_Var(4.2)
-    z = x * y + Rev_Var.sin(x)
-    z.grad_value = 1.0
+    # x = Rev_Var(0.5)
+    # y = Rev_Var(4.2)
+    # z = x * y + Rev_Var.sin(x)
+    # z.grad_value = 1.0
 
-    assert z.value == pytest.approx(2.579425538604203)
-    assert x.grad() == pytest.approx(y.value + np.cos(x.value))
-    assert y.grad() == pytest.approx(x.value)
+    # assert z.value == pytest.approx(2.579425538604203)
+    # assert x.grad() == pytest.approx(y.value + np.cos(x.value))
+    # assert y.grad() == pytest.approx(x.value)
 
-    x = Rev_Var(5)
-    y = Rev_Var(1)
-    z = Rev_Var.log(x) ** Rev_Var.sin(y)
-    z.grad_value = 1.0
-    print(z.value, x.grad(), y.grad())
+    # x = Rev_Var(5)
+    # y = Rev_Var(1)
+    # z = Rev_Var.log(x) ** Rev_Var.sin(y)
+    # z.grad_value = 1.0
+    # print(z.value, x.grad(), y.grad())
 
-'''
-# sinh
-y = Rev_Var(3.0)
-z = Rev_Var.sinh(y)
-z.grad_value = 1
-print(y.grad(), (np.exp(3) + np.exp(-3))/2)
+    # # sinh
+    # y = Rev_Var(3.0)
+    # z = Rev_Var.sinh(y)
+    # z.grad_value = 1
+    # print(y.grad(), (np.exp(3) + np.exp(-3))/2)
 
-# expk
-y = Rev_Var(3.0)
-z = Rev_Var.expk(4.0, y)
-z.grad_value = 1
-print(y.grad(), 4**3*np.log(4))
-
-
-# pow
-z1 = x**y
-# set final derivative df/dx_final = 1
-z1.grad_value = 1
-print(vars(z1))
-# calculate final partial derivative df/dx and df/dy
-print(x.grad(), 3*(2**2))
-print(vars(x))
-print(y.grad(), 2**3*np.log(2))
-print(vars(y))
-
-y = Rev_Var(3.0)
-z2 = y**3
-# set final derivative df/dx_final = 1
-z2.grad_value = 1
-print(vars(z2))
-# calculate final partial derivative df/dx and df/dy
-print(y.grad(), 3*(3**2))
-print(vars(y))
+    # # expk
+    # y = Rev_Var(3.0)
+    # z = Rev_Var.expk(4.0, y)
+    # z.grad_value = 1
+    # print(y.grad(), 4**3*np.log(4))
 
 
-# rpow
-z3 = 2**y
-z3.grad_value = 1
-print(vars(z3))
-print(y.grad(), 2**3*np.log(2))
-print(vars(y))
+    # # pow
+    # z1 = x**y
+    # # set final derivative df/dx_final = 1
+    # z1.grad_value = 1
+    # print(vars(z1))
+    # # calculate final partial derivative df/dx and df/dy
+    # print(x.grad(), 3*(2**2))
+    # print(vars(x))
+    # print(y.grad(), 2**3*np.log(2))
+    # print(vars(y))
 
-# div
-z4 = x/y
-z4.grad_value = 1
-print(x.grad(), 1/3)
-print(y.grad(),-2/(3**2))
-
-
-z5 = x/2
-z5.grad_value = 1
-print(x.grad(), 1/2)
-
-z6 = 2/y
-z6.grad_value = 1
-print(y.grad(), -2/(3**2))
+    # y = Rev_Var(3.0)
+    # z2 = y**3
+    # # set final derivative df/dx_final = 1
+    # z2.grad_value = 1
+    # print(vars(z2))
+    # # calculate final partial derivative df/dx and df/dy
+    # print(y.grad(), 3*(3**2))
+    # print(vars(y))
 
 
-# neg
-z5 = x/2
-z5.grad_value = 1
-x.grad()
-print(vars(x))
-print(vars(-x))
+    # # rpow
+    # z3 = 2**y
+    # z3.grad_value = 1
+    # print(vars(z3))
+    # print(y.grad(), 2**3*np.log(2))
+    # print(vars(y))
 
-print(vars(-y))
-
-
-# eq
-z6 = x/2
-z7 = x/2
-print(z6 == z7)
-
-x2 = Rev_Var(2.0)
-print(x == x2)
-
-# neq
-z6 = x/2
-z7 = x/2
-print(z6 != z7)
-
-x = Rev_Var(2.0)
-x2 = Rev_Var(2.0)
-print(x != x2)
-y = Rev_Var(3.0)
-print(x != y)
+    # # div
+    # z4 = x/y
+    # z4.grad_value = 1
+    # print(x.grad(), 1/3)
+    # print(y.grad(),-2/(3**2))
 
 
-# log
-x = Rev_Var(2.0)
-z1 = Rev_Var.log(x)
-z1.grad_value = 1
-print(x.grad(), 1/2)
+    # z5 = x/2
+    # z5.grad_value = 1
+    # print(x.grad(), 1/2)
 
-# logk
-x = Rev_Var(2.0)
-z2 = Rev_Var.logk(x, 3.0)
-z2.grad_value = 1
-print(z2.value, np.log(2) / np.log(3))
-print(x.grad(), 1/(2*np.log(3)))
+    # z6 = 2/y
+    # z6.grad_value = 1
+    # print(y.grad(), -2/(3**2))
 
 
-# exp
-x = Rev_Var(2.0)
-z1 = Rev_Var.exp(x)
-z1.grad_value = 1
-print(x.grad(), np.exp(2))
-print(z1.value, np.exp(2))
+    # # neg
+    # z5 = x/2
+    # z5.grad_value = 1
+    # x.grad()
+    # print(vars(x))
+    # print(vars(-x))
 
-# sqrt
-x = Rev_Var(2.0)
-z1 = Rev_Var.sqrt(x)
-z1.grad_value = 1
-print(x.grad(), 0.5*(2**(-0.5)))
-print(z1.value, np.sqrt(2))
-'''
+    # print(vars(-y))
+
+
+    # # eq
+    # z6 = x/2
+    # z7 = x/2
+    # print(z6 == z7)
+
+    # x2 = Rev_Var(2.0)
+    # print(x == x2)
+
+    # # neq
+    # z6 = x/2
+    # z7 = x/2
+    # print(z6 != z7)
+
+    # x = Rev_Var(2.0)
+    # x2 = Rev_Var(2.0)
+    # print(x != x2)
+    # y = Rev_Var(3.0)
+    # print(x != y)
+
+
+    # # log
+    # x = Rev_Var(2.0)
+    # z1 = Rev_Var.log(x)
+    # z1.grad_value = 1
+    # print(x.grad(), 1/2)
+
+    # # logk
+    # x = Rev_Var(2.0)
+    # z2 = Rev_Var.logk(x, 3.0)
+    # z2.grad_value = 1
+    # print(z2.value, np.log(2) / np.log(3))
+    # print(x.grad(), 1/(2*np.log(3)))
+
+
+    # # exp
+    # x = Rev_Var(2.0)
+    # z1 = Rev_Var.exp(x)
+    # z1.grad_value = 1
+    # print(x.grad(), np.exp(2))
+    # print(z1.value, np.exp(2))
+
+    # # sqrt
+    # x = Rev_Var(2.0)
+    # z1 = Rev_Var.sqrt(x)
+    # z1.grad_value = 1
+    # print(x.grad(), 0.5*(2**(-0.5)))
+    # print(z1.value, np.sqrt(2))
 

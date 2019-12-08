@@ -142,33 +142,33 @@ if __name__ == "__main__":
     doctest.testmod(verbose=True)
 
 
-    f1 = lambda x, y: Var.log(x) ** Var.sin(y)
-    ad = AD(np.array([5, 1]), np.array([1, 1]), AD_Mode.FORWARD)
-    print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
+    # f1 = lambda x, y: Var.log(x) ** Var.sin(y)
+    # ad = AD(np.array([5, 1]), np.array([1, 1]), AD_Mode.FORWARD)
+    # print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
 
-    f1 = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
-    ad = AD(np.array([5, 1]), np.array([1, 1]), AD_Mode.REVERSE)
-    print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
-
-
-
-    f1 = lambda x: Var.log(x) ** 2
-    ad = AD(np.array([2]), np.array([1]), AD_Mode.FORWARD)
-    print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
-
-    f1 = lambda x: Rev_Var.log(x) ** 2
-    ad = AD(np.array([2]), np.array([1]), AD_Mode.REVERSE)
-    print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
+    # f1 = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
+    # ad = AD(np.array([5, 1]), np.array([1, 1]), AD_Mode.REVERSE)
+    # print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
 
 
 
-    f1 = lambda x, y: Var.log(x) ** Var.sin(y)
-    f2 = lambda x, y: Var.sqrt(x) / y
-    ad = AD(np.array([4.12, 5.13]), np.array([1, 1]), AD_Mode.FORWARD)
-    print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
+    # f1 = lambda x: Var.log(x) ** 2
+    # ad = AD(np.array([2]), np.array([1]), AD_Mode.FORWARD)
+    # print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
 
-    f1 = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
-    f2 = lambda x, y: Rev_Var.sqrt(x) / y
-    ad = AD(np.array([4.12, 5.13]), np.array([1, 1]), AD_Mode.REVERSE)
-    print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
+    # f1 = lambda x: Rev_Var.log(x) ** 2
+    # ad = AD(np.array([2]), np.array([1]), AD_Mode.REVERSE)
+    # print("Var.log(x) ** 2: {}".format(vars(ad.auto_diff(f1))))
+
+
+
+    # f1 = lambda x, y: Var.log(x) ** Var.sin(y)
+    # f2 = lambda x, y: Var.sqrt(x) / y
+    # ad = AD(np.array([4.12, 5.13]), np.array([1, 1]), AD_Mode.FORWARD)
+    # print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
+
+    # f1 = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
+    # f2 = lambda x, y: Rev_Var.sqrt(x) / y
+    # ad = AD(np.array([4.12, 5.13]), np.array([1, 1]), AD_Mode.REVERSE)
+    # print("jac_matrix: \n{}".format(ad.jac_matrix([f1, f2])))
 
