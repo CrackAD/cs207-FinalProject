@@ -157,9 +157,8 @@ def test_expk():
 	x = Rev_Var(2.0)
 	z = Rev_Var.expk(3.0,x)
 	z.grad_value = 1
-	assert z.value == pytest.approx(9.0)
-	assert x.grad() == pytest.approx(9.887510598012987)
-
+	assert z.value == pytest.approx(8)
+	assert x.grad() == pytest.approx(12)
 
 def test_sqrt():
 	x = Rev_Var(2.0)
@@ -168,6 +167,13 @@ def test_sqrt():
 	assert z1.value == pytest.approx(1.4142135623730951)
 	assert x.grad() == pytest.approx(0.3535533905932738)
 
+def test_logistic():
+	x = Rev_Var(3.0)
+	z = Rev_Var.logistic(x)
+	z.grad_value = 1
+	assert z.value == pytest.approx(1 / (1+np.exp(-3)))
+	assert x.grad() == pytest.approx(np.exp(3) / ((1 + np.exp(3))**2))
+
 def test_sinh():
 	x = Rev_Var(2.0)
 	z = Rev_Var.sinh(x)
@@ -175,16 +181,25 @@ def test_sinh():
 	z2 = Rev_Var.sinh(2)
 	assert z.value == pytest.approx(3.626860407847019)
 	assert z2 == pytest.approx(3.626860407847019)
-	assert x.grad() == pytest.approx(3.626860407847019)
+	assert x.grad() == pytest.approx(3.7621956910836314)
 
 def test_cosh():
 	x = Rev_Var(2.0)
 	z = Rev_Var.cosh(x)
 	z.grad_value = 1
 	z3 = Rev_Var.cosh(2)
-	assert z.value == pytest.approx(3.626860407847019)
-	assert z3 == pytest.approx(3.626860407847019)
+	assert z.value == pytest.approx(3.7621956910836314)
+	assert z3 == pytest.approx(3.7621956910836314)
 	assert x.grad() == pytest.approx(3.626860407847019)
+
+def test_tahh():
+	x = Rev_Var(2.0)
+	z = Rev_Var.tanh(x)
+	z.grad_value = 1
+	z4 = Rev_Var.tanh(2)
+	assert z.value == pytest.approx(0.964027580075817)
+	assert z4 == pytest.approx(0.964027580075817)
+	assert x.grad() == pytest.approx(0.07065082485316432)
 
 def test_sin():
 	x = Rev_Var(2.0)
@@ -212,5 +227,19 @@ def test_tan():
 	assert z.value == pytest.approx(-2.185039863261519)
 	assert x.grad() == pytest.approx(5.774399204041917)
 	assert Rev_Var.tan(y) == np.tan(y)
+
+def test_arcsin():
+	x = Rev_Var(0.5)
+	y = 2
+	z = Rev_Var.arcsin(x)
+	z.grad_value = 1
+	assert z.value == pytest.approx(0.9092974268256817)
+	assert x.grad() == pytest.approx(-0.4161468365471424)
+	assert Rev_Var.sin(y) == np.sin(y)
+
+
+
+
+
 
 
