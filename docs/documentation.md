@@ -78,6 +78,7 @@ For instance, Let one of the yet-to-given variables ![var](https://latex.codecog
 x1 = t1*t2
 ```
 We can calculate the partial derivatives of ![var](https://latex.codecogs.com/svg.latex?x_1) with respect to input variables ![var](https://latex.codecogs.com/svg.latex?t_1), ![var](https://latex.codecogs.com/svg.latex?t_2). Those partial derivatives are contributing weights of the yet-to-given variable ![var](https://latex.codecogs.com/svg.latex?x_1) to calculate the final function's derivative with respect to input variables ![var](https://latex.codecogs.com/svg.latex?t_1), ![var](https://latex.codecogs.com/svg.latex?t_2) respectively. We can sum over all yet-to-given variables ![var](https://latex.codecogs.com/svg.latex?x_1), ..., ![var](https://latex.codecogs.com/svg.latex?x_m) to calculate the derivative of function f with respect to one input variable ![var](https://latex.codecogs.com/svg.latex?t_j). As the generalized chain rule shows:
+
 ![](generalized_chain_rule.png)
 
 Below is a concrete example of reverse mode:
