@@ -535,7 +535,7 @@ class Rev_Var():
     def arcsin(var):
         try:
             z = Rev_Var(np.arcsin(var.value))
-            var.children.append((1 / ((1 - var.val ** 2) ** 0.5), z)) # weight = dz/dvar
+            var.children.append((1 / ((1 - var.value ** 2) ** 0.5), z)) # weight = dz/dvar
             return z
         except:
             return np.arcsin(var)
@@ -544,7 +544,7 @@ class Rev_Var():
     def arccos(var):
         try:
             z = Rev_Var(np.arccos(var.value))
-            var.children.append((-1 / ((1 - var.val ** 2) ** 0.5), z)) # weight = dz/dvar
+            var.children.append((-1 / ((1 - var.value ** 2) ** 0.5), z)) # weight = dz/dvar
             return z
         except:
             return np.arccos(var)
@@ -553,7 +553,7 @@ class Rev_Var():
     def arctan(var):
         try:
             z = Rev_Var(np.arctan(var.value))
-            var.children.append((1 / (1 + var.val ** 2), z)) # weight = dz/dvar
+            var.children.append((1 / (1 + var.value ** 2), z)) # weight = dz/dvar
             return z
         except:
             return np.arctan(var)
