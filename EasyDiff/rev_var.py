@@ -888,11 +888,6 @@ class Rev_Var():
             return z
         except:
             return np.tan(var)
-        
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=True)
-    
     @staticmethod
     def arcsin(var):
         """ returns a Rev_Var as the result of var.arcsin()
@@ -962,6 +957,7 @@ if __name__ == "__main__":
             return z
         except:
             return np.arctan(var)
+    
     
 if __name__ == "__main__":
     import doctest
