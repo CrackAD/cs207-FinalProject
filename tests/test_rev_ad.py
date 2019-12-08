@@ -1,12 +1,9 @@
 import pytest
 import numpy as np
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-from rev_var import Rev_Var
-from var import Var
-from ad import AD
-from ad import AD_Mode
+from EasyDiff.rev_var import Rev_Var
+from EasyDiff.var import Var
+from EasyDiff.ad import AD
+from EasyDiff.ad import AD_Mode
 
 # x = Rev_Var(3, np.array([1,0]))
 # y = Rev_Var(2, np.array([0,1]))
