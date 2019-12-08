@@ -33,7 +33,7 @@ In the case where we have more than one independent variable, this expression ca
 
 The generalized chain rule can be shown as:
 
-![](generalized_chain_rule.png)
+![](./figures/generalized_chain_rule.png)
 
 **Elementary Function**
 
@@ -50,7 +50,7 @@ Forward mode, as the name suggests, traverses the chain rule from the inside to 
 
 For example, we can look at the following funciton, graph, and table to show how we approach the computation with the chain rule in forward mode:
 
-![](milestone2_graph.png)
+![](./figures/milestone2_graph.png)
 
 #### Dual Number & AD
 
@@ -186,7 +186,7 @@ Our test suite is in the `tests` folder, and we implement `pytest` and `doctest`
 
 EasyDiff has not been distributed on PyPI yet. Instead, users could manully clone our project repository to their personal workspace. Instructions of manual installation is specified in the **Installation** section above.
 
-## Implementation
+## Basic: Forward Mode Implementation
 
 #### Core Classes, Important Attributes, and Data Structures
 
@@ -200,8 +200,8 @@ For example, we will store parameters *a* and *b_i (1<i<K)* for dual number ![du
 ***AD*** has a attributes: the Var object array. 
 
 
-***Var*** class has a bunch of overloaded build-in functions (eg, *, /, +, -, **) and other elementary functions (eg, sin, sqrt, log, exp) implementing dual number operations correspondingly. We implement these elementary functions as ***static methods***. 
-Specifically, it should have the following signature: 
+***Var*** class has a bunch of overloaded build-in functions (eg, \*, /, +, -, \*\*) and other elementary functions (ie, sin, cos, tan, arcsin, arccos, arctan, cosh, sinh, tanh, sqrt, log, logk, exp, expk, and logistic functions) implementing dual number operations correspondingly. We implement these elementary functions as ***static methods***. 
+Specifically, it haves the following signature: 
 ```python
 class Var():
     def __init__(self, val, dual_paras):
@@ -212,15 +212,15 @@ class Var():
         ...
     ...
     @staticmethod
-    def sin(self):
+    def sin(var):
         ...
     @staticmethod
-    def sqrt(self):
+    def sqrt(var):
         ...
     ...                                
 ```
 
-***AD*** class includes some functions that users can use to do AD-related calculation. For example, it can include automatic differentiation, Jacobian matrix calculation, etc. Specifically, it should have the following signature: 
+***AD*** class includes some functions that users can use to do AD-related calculation. For example, it can include automatic differentiation, Jacobian matrix calculation, etc. Specifically, it has the following signature: 
 ```python
 class AD():
     def __init__(self, vals, ders):
@@ -238,23 +238,51 @@ where *vals* is an array of the initial values for the *K* input variables, *der
 We will rely on *numpy* library for mathematic operations, and *pytest*, *pytest-cov*, and *doctest* for testing purpose. 
 
 Currently, we cover the following elementary functions: 
-* **\+** (\_\_add\_\_, \_\_radd\_\_), **-** (\_\_sub\_\_, \_\_rsub\_\_), **\*** (\_\_mul\_\_, \_\_rmul\_\_), **/** (\_\_truediv\_\_, \_\_rtruediv\_\_), **\*\*** (\_\_pow\_\_, \_\_rpow\_\_), 
+* \_\_add\_\_, \_\_radd\_\_, \_\_sub\_\_, \_\_rsub\_\_, \_\_mul\_\_, \_\_rmul\_\_, \_\_truediv\_\_, \_\_rtruediv\_\_, \_\_pow\_\_, \_\_rpow\_\_, 
 * \_\_neg\_\_, \_\_pos\_\_, \_\_eq\_\_, \_\_ne\_\_, 
-* log(), logk, sqrt(), exp(),
-* sin(), cos(), tan().
+* log(), logk, sqrt(), exp(), expk(),
+* sin(), cos(), tan(), arcsin(), arccos(), arctan(), 
+* sinh(), cosh(), tanh(), 
+* logistic function. 
 
 For python build-in operations (the first two rows), we overload them following the corresponding dual number operations; 
-for other elementary functions (the last two rows), we implement them within **Var** class as static methods. 
+for other elementary functions (the last four rows), we implement them within **Var** class as static methods. 
 
-## Future
+## Extension: Reverse Mode Implementation
 
-#### Aspects not implemented yet
-Our implementation currently allows multple functions with multiple inputs.
+We extend our basic implementation to support reverse-mode automatic differentiation (for detailed mathmatical background about reverse-mode automatic differentiation, please refer to the introduction and motivation sections). 
+Specifically, we add a new class named `Rev_Var` that contains the value (`value`), gradient value (`grad_value`), and children (`children`) (using a python list) of reverse-mode node; this class also overload some build-in operators (eg, \*, /, +, -, \*\*) and other elementary functions (eg, sin, sqrt, log, exp) according to the rule of reverse-mode automatic differentiation. These elementary functions are implemented by either overloading or static methods within **Rev_Var** class.
 
-#### Additional features
-We are planning to add two additional features:
+In reverse mode, when implementing these elementary functions, in addition to the corresponding derivative calculation, we also maintain a node dependency graph using the `children` list, which specially contains the weight and `Rev_Var` object of all the children of current node. 
 
-* option for the second-order derivative
-* an interface for users who are not familiar with Python lambda function to use our package to calculate derivatives 
+Then, the method `grad()` in the final `Rev_Var` object (produced by user-defined function with multiple input `Rev_Var` objects) calculates its `grad_value` with regards to each input variable, by adding up all the products of `grad_value`s and weights of all its children in a recursive way. 
 
-To enable the second-order derivatives, we need to change the data structure in Var.py by adding another list for second derivatives. As for the interface, we are planning to create another module UI.py, which is an encapsulation of AD.py.
+
+Specifically, `Rev_Var` has the following signature: 
+```python
+class Var():
+    def __init__(self, value):
+        ...
+    def grad(self):
+        ...
+    def __add__(self, other):
+        ...
+    def __radd__(self, other):
+        ...
+    ...
+    @staticmethod
+    def sin(var):
+        ...
+    @staticmethod
+    def sqrt(var):
+        ...
+    ...                                
+```
+
+
+We also define a `AD_Mode` enum class in `ad.py`, and extend `AD` class to support reverse mode by having an `AD_Mode` enum as input parameters in its `__init__` function. In this way, users can specific which mode is used during creating `AD` objects, and calculate derivatives in the corresponding way. 
+
+
+Regards the external dependencies, reverse mode implementation depends on the same libraries as the basic forward mode (ie, numpy, pytest, pytest-cov, doctest); it also covers all the elementary functions mentioned in the [Basic: Forward Mode Implementation](#basic-forward-mode-implementation) section. 
+
+
