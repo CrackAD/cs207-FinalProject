@@ -82,6 +82,8 @@ We can calculate the partial derivatives of ![var](https://latex.codecogs.com/sv
 
 Below is a concrete example of reverse mode:
 
+![](./figures/reverse_mode.png)
+
 ## How to use CrackAD
 
 #### Installation
