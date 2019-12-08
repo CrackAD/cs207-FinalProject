@@ -70,14 +70,14 @@ For instance, let's say we want to calculate the partial derivatives of x and y 
 ### Automatic Differentiation & The Reverse Mode
 **Reverse Mode**
 
-Reverse mode, as the name suggests, computes all the derivatives in reverse order, from the final functions, through yet-to-given variables, to input variables. For each step, it calculates numerical value and the partial derivative of the yet-to-given variable ![var](https://latex.codecogs.com/svg.latex?x) with respect to variables ![var](https://latex.codecogs.com/svg.latex?t_1,... ,t_n) that ![var](https://latex.codecogs.com/svg.latex?x) depends on. Thus, we can calculate a funciton's partial derivative with respect to each input variable in one go. 
+Reverse mode, as the name suggests, computes all the derivatives in reverse order, from the final functions, through yet-to-given variables, to input variables. For each step, it calculates numerical value and the partial derivative of the yet-to-given variable ![var](https://latex.codecogs.com/svg.latex?x) with respect to variables ![var](https://latex.codecogs.com/svg.latex?t_1),... ,![var](https://latex.codecogs.com/svg.latex?t_n) that ![var](https://latex.codecogs.com/svg.latex?x) depends on. Thus, we can calculate a funciton's partial derivative with respect to each input variable in one go. 
 
 For instance, Let one of the yet-to-given variables ![var](https://latex.codecogs.com/svg.latex?x_1) be:
 
 ```
 x1 = t1*t2
 ```
-We can calculate the partial derivatives of ![var](https://latex.codecogs.com/svg.latex?x_1) with respect to input variables ![var](https://latex.codecogs.com/svg.latex?t_1, t_2). Those partial derivatives are contributing weights of the yet-to-given variable ![var](https://latex.codecogs.com/svg.latex?x_1) to calculate the final function's derivative with respect to input variables ![var](https://latex.codecogs.com/svg.latex?t_1, t_2) respectively. We can sum over all yet-to-given variables ![var](https://latex.codecogs.com/svg.latex?x_1, ..., x_m) to calculate the derivative of function f with respect to one input variable ![var](https://latex.codecogs.com/svg.latex?t_j). As the generalized chain rule shows:
+We can calculate the partial derivatives of ![var](https://latex.codecogs.com/svg.latex?x_1) with respect to input variables ![var](https://latex.codecogs.com/svg.latex?t_1), ![var](https://latex.codecogs.com/svg.latex?t_2). Those partial derivatives are contributing weights of the yet-to-given variable ![var](https://latex.codecogs.com/svg.latex?x_1) to calculate the final function's derivative with respect to input variables ![var](https://latex.codecogs.com/svg.latex?t_1), ![var](https://latex.codecogs.com/svg.latex?t_2) respectively. We can sum over all yet-to-given variables ![var](https://latex.codecogs.com/svg.latex?x_1), ..., ![var](https://latex.codecogs.com/svg.latex?x_m) to calculate the derivative of function f with respect to one input variable ![var](https://latex.codecogs.com/svg.latex?t_j). As the generalized chain rule shows:
 ![](generalized_chain_rule.png)
 
 Below is a concrete example of reverse mode:
