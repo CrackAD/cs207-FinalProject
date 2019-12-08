@@ -34,7 +34,7 @@ In the case where we have more than one independent variable, this expression ca
 
 The generalized chain rule can be shown as:
 
-![](generalized_chain_rule.png)
+![](./figures/generalized_chain_rule.png)
 
 **Elementary Function**
 
@@ -51,7 +51,7 @@ Forward mode, as the name suggests, traverses the chain rule from the inside to 
 
 For example, we can look at the following funciton, graph, and table to show how we approach the computation with the chain rule in forward mode:
 
-![](milestone2_graph.png)
+![](./figures/milestone2_graph.png)
 
 #### Dual Number & AD
 
