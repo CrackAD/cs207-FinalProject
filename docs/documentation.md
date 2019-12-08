@@ -15,7 +15,7 @@ In this project, we aim to create an automatic differentiation package so that w
 
 ## Background
 
-#### Automatic Differentiation & The Forward Mode
+### Automatic Differentiation & The Forward Mode
 Given the notion that AD enables us to compute the derivatives of a function efficiently and accurately, let us dig further into its mathematical mechanism:
 
 **The Chain Rule**
@@ -28,7 +28,6 @@ Let F(x) = f(g(x))
 The derivative of F(x) is, by the chain rule:
 ```
 F'(x)=f'(g(x))g'(x)
-
 ```
 In the case where we have more than one independent variable, this expression can be easily expanded. We apply the chain rule to composites of more than two functions, facilitating the computation of derivatives.
 
@@ -66,6 +65,22 @@ In this way, the final solution has the evaluation result (the real component), 
 It's also intuitive to use dual numbers with multivariable functions. Since the expected end result is a partial derivative for each variable in the equation, we would just compute a dual number per variable, and process the entire equation for each of those dual numbers separately.
 
 For instance, let's say we want to calculate the partial derivatives of x and y of the function ![dual](https://latex.codecogs.com/svg.latex?3x^2-2y^3) with the input (5, 2). First, to get the partial derivative of x, we substitue x with ![dual](https://latex.codecogs.com/svg.latex?5+1\epsilon_x+0\epsilon_y) and y with ![dual](https://latex.codecogs.com/svg.latex?2+0\epsilon_x+1\epsilon_y) (when calculating the partial derivative of x, y is a constant). This gives us ![dual](https://latex.codecogs.com/svg.latex?59+30\epsilon_x-24\epsilon_y), saying that the value is 59 at location (5, 2), and the derivative of x at that point is 30 and the partial derivative of y to be -24.
+
+
+### Automatic Differentiation & The Reverse Mode
+**Reverse Mode**
+
+Reverse mode, as the name suggests, computes all the derivatives in reverse order, from the final functions, through yet-to-given variables, to input variables. For each step, it calculates numerical value and the partial derivative of the yet-to-given variable ![var](https://latex.codecogs.com/svg.latex?x) with respect to variables ![var](https://latex.codecogs.com/svg.latex?t_1,... ,t_n) that ![var](https://latex.codecogs.com/svg.latex?x) depends on. Thus, we can calculate a funciton's partial derivative with respect to each input variable in one go. 
+
+For instance, Let one of the yet-to-given variables ![var](https://latex.codecogs.com/svg.latex?x_1) be:
+
+```
+x1 = t1*t2
+```
+We can calculate the partial derivatives of ![var](https://latex.codecogs.com/svg.latex?x_1) with respect to input variables ![var](https://latex.codecogs.com/svg.latex?t_1, t_2). Those partial derivatives are contributing weights of the yet-to-given variable ![var](https://latex.codecogs.com/svg.latex?x_1) to calculate the final function's derivative with respect to input variables ![var](https://latex.codecogs.com/svg.latex?t_1, t_2) respectively. We can sum over all yet-to-given variables ![var](https://latex.codecogs.com/svg.latex?x_1, ..., x_m) to calculate the derivative of function f with respect to one input variable ![var](https://latex.codecogs.com/svg.latex?t_j). As the generalized chain rule shows:
+![](generalized_chain_rule.png)
+
+Below is a concrete example of reverse mode:
 
 ## How to use CrackAD
 
@@ -171,7 +186,7 @@ Our test suite is in the `tests` folder, and we implement `pytest` and `doctest`
 
 EasyDiff has not been distributed on PyPI yet. Instead, users could manully clone our project repository to their personal workspace. Instructions of manual installation is specified in the **Installation** section above.
 
-## Implementation
+## Basic: Forward Mode Implementation
 
 #### Core Classes, Important Attributes, and Data Structures
 
@@ -185,8 +200,8 @@ For example, we will store parameters *a* and *b_i (1<i<K)* for dual number ![du
 ***AD*** has a attributes: the Var object array. 
 
 
-***Var*** class has a bunch of overloaded build-in functions (eg, *, /, +, -, **) and other elementary functions (eg, sin, sqrt, log, exp) implementing dual number operations correspondingly. We implement these elementary functions as ***static methods***. 
-Specifically, it should have the following signature: 
+***Var*** class has a bunch of overloaded build-in functions (eg, \*, /, +, -, \*\*) and other elementary functions (ie, sin, cos, tan, arcsin, arccos, arctan, cosh, sinh, tanh, sqrt, log, logk, exp, expk, and logistic functions) implementing dual number operations correspondingly. We implement these elementary functions as ***static methods***. 
+Specifically, it haves the following signature: 
 ```python
 class Var():
     def __init__(self, val, dual_paras):
@@ -197,15 +212,15 @@ class Var():
         ...
     ...
     @staticmethod
-    def sin(self):
+    def sin(var):
         ...
     @staticmethod
-    def sqrt(self):
+    def sqrt(var):
         ...
     ...                                
 ```
 
-***AD*** class includes some functions that users can use to do AD-related calculation. For example, it can include automatic differentiation, Jacobian matrix calculation, etc. Specifically, it should have the following signature: 
+***AD*** class includes some functions that users can use to do AD-related calculation. For example, it can include automatic differentiation, Jacobian matrix calculation, etc. Specifically, it has the following signature: 
 ```python
 class AD():
     def __init__(self, vals, ders):
@@ -223,23 +238,51 @@ where *vals* is an array of the initial values for the *K* input variables, *der
 We will rely on *numpy* library for mathematic operations, and *pytest*, *pytest-cov*, and *doctest* for testing purpose. 
 
 Currently, we cover the following elementary functions: 
-* **\+** (\_\_add\_\_, \_\_radd\_\_), **-** (\_\_sub\_\_, \_\_rsub\_\_), **\*** (\_\_mul\_\_, \_\_rmul\_\_), **/** (\_\_truediv\_\_, \_\_rtruediv\_\_), **\*\*** (\_\_pow\_\_, \_\_rpow\_\_), 
+* \_\_add\_\_, \_\_radd\_\_, \_\_sub\_\_, \_\_rsub\_\_, \_\_mul\_\_, \_\_rmul\_\_, \_\_truediv\_\_, \_\_rtruediv\_\_, \_\_pow\_\_, \_\_rpow\_\_, 
 * \_\_neg\_\_, \_\_pos\_\_, \_\_eq\_\_, \_\_ne\_\_, 
-* log(), logk, sqrt(), exp(),
-* sin(), cos(), tan().
+* log(), logk, sqrt(), exp(), expk(),
+* sin(), cos(), tan(), arcsin(), arccos(), arctan(), 
+* sinh(), cosh(), tanh(), 
+* logistic function. 
 
 For python build-in operations (the first two rows), we overload them following the corresponding dual number operations; 
-for other elementary functions (the last two rows), we implement them within **Var** class as static methods. 
+for other elementary functions (the last four rows), we implement them within **Var** class as static methods. 
 
-## Future
+## Extension: Reverse Mode Implementation
 
-#### Aspects not implemented yet
-Our implementation currently allows multple functions with multiple inputs.
+We extend our basic implementation to support reverse-mode automatic differentiation (for detailed mathmatical background about reverse-mode automatic differentiation, please refer to the introduction and motivation sections). 
+Specifically, we add a new class named `Rev_Var` that contains the value (`value`), gradient value (`grad_value`), and children (`children`) (using a python list) of reverse-mode node; this class also overload some build-in operators (eg, \*, /, +, -, \*\*) and other elementary functions (eg, sin, sqrt, log, exp) according to the rule of reverse-mode automatic differentiation. These elementary functions are implemented by either overloading or static methods within **Rev_Var** class.
 
-#### Additional features
-We are planning to add two additional features:
+In reverse mode, when implementing these elementary functions, in addition to the corresponding derivative calculation, we also maintain a node dependency graph using the `children` list, which specially contains the weight and `Rev_Var` object of all the children of current node. 
 
-* option for the second-order derivative
-* an interface for users who are not familiar with Python lambda function to use our package to calculate derivatives 
+Then, the method `grad()` in the final `Rev_Var` object (produced by user-defined function with multiple input `Rev_Var` objects) calculates its `grad_value` with regards to each input variable, by adding up all the products of `grad_value`s and weights of all its children in a recursive way. 
 
-To enable the second-order derivatives, we need to change the data structure in Var.py by adding another list for second derivatives. As for the interface, we are planning to create another module UI.py, which is an encapsulation of AD.py.
+
+Specifically, `Rev_Var` has the following signature: 
+```python
+class Var():
+    def __init__(self, value):
+        ...
+    def grad(self):
+        ...
+    def __add__(self, other):
+        ...
+    def __radd__(self, other):
+        ...
+    ...
+    @staticmethod
+    def sin(var):
+        ...
+    @staticmethod
+    def sqrt(var):
+        ...
+    ...                                
+```
+
+
+We also define a `AD_Mode` enum class in `ad.py`, and extend `AD` class to support reverse mode by having an `AD_Mode` enum as input parameters in its `__init__` function. In this way, users can specific which mode is used during creating `AD` objects, and calculate derivatives in the corresponding way. 
+
+
+Regards the external dependencies, reverse mode implementation depends on the same libraries as the basic forward mode (ie, numpy, pytest, pytest-cov, doctest); it also covers all the elementary functions mentioned in the [Basic: Forward Mode Implementation](#basic-forward-mode-implementation) section. 
+
+
