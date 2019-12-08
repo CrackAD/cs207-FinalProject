@@ -230,16 +230,30 @@ def test_tan():
 
 def test_arcsin():
 	x = Rev_Var(0.5)
-	y = 2
+	y = 0.3
 	z = Rev_Var.arcsin(x)
 	z.grad_value = 1
-	assert z.value == pytest.approx(0.9092974268256817)
-	assert x.grad() == pytest.approx(-0.4161468365471424)
-	assert Rev_Var.sin(y) == np.sin(y)
+	assert z.value == pytest.approx(0.5235987755982988)
+	assert x.grad() == pytest.approx(1.1547005383792517)
+	assert Rev_Var.arcsin(y) == np.arcsin(y)
 
+def test_arccos():
+	x = Rev_Var(0.5)
+	y = 0.3
+	z = Rev_Var.arccos(x)
+	z.grad_value = 1
+	assert z.value == pytest.approx(1.0471975511965976)
+	assert x.grad() == pytest.approx(-1.1547005383792517)
+	assert Rev_Var.arccos(y) == np.arccos(y)
 
-
-
+def test_arctan():
+	x = Rev_Var(0.5)
+	y = 0.25
+	z = Rev_Var.arctan(x)
+	z.grad_value = 1
+	assert z.value == pytest.approx(0.46364760900080615)
+	assert x.grad() == pytest.approx(0.8)
+	assert Rev_Var.arctan(y) == np.arctan(y)
 
 
 
