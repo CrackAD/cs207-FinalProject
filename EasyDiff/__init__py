@@ -1,2 +1,4 @@
 name = "EasyDiff"
-import EasyDiff
+from .ad import *
+from .var import *
+from .rev_var import *

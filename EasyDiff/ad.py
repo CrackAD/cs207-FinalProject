@@ -1,6 +1,4 @@
 import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
 from EasyDiff.var import Var
 from EasyDiff.rev_var import Rev_Var
 import numpy as np

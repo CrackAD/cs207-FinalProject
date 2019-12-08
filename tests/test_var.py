@@ -1,9 +1,6 @@
 import pytest
 import numpy as np
-import sys, os
-myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '/../')
-from var import Var
+from EasyDiff.var import Var
 
 
 def test_var_add():
