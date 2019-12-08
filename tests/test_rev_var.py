@@ -25,7 +25,7 @@ def test_rev_real_add():
     x = Rev_Var(0.5)
     y = 4.2
     z = x+y
-    assert z.value == x.value + 4.2
+    assert z.value == x.value + y
 
 def test_rev_mul():
     x = Rev_Var(0.5)
@@ -105,11 +105,15 @@ def test_rtruediv():
 
 def test_neg():
 	x = Rev_Var(0.5)
+	y = Rev_Var(-0.5)
 	assert -x.value == -0.5
+	assert x.value == -y.value
+
 
 def test_pos(): 
 	x = Rev_Var(0.5)
 	assert +x.value == x.value
+	assert +x.value == 0.5
 
 def test_equal():
 	x = Rev_Var(0.5)
@@ -129,16 +133,20 @@ def test_log():
 	x = Rev_Var(2.0)
 	z1 = Rev_Var.log(x)
 	z1.grad_value = 1
+	z2 = Rev_Var.log(2.0)
 	assert z1.value == pytest.approx(0.6931471805599453)
 	assert z1.value == np.log(2)
 	assert x.grad() == pytest.approx(0.5)
+	assert z2 == np.log(2)
 
 def test_logk():
 	x = Rev_Var(2.0)
 	z2 = Rev_Var.logk(x, 3.0)
 	z2.grad_value = 1
+	z3 = Rev_Var.logk(2.0, 3.0)
 	assert z2.value == np.log(2) / np.log(3)
 	assert x.grad() == pytest.approx(0.45511961331341866)
+	assert z3 == np.log(2)/np.log(3)
 
 def test_exp():
 	x = Rev_Var(2.0)
@@ -161,15 +169,19 @@ def test_sqrt():
 	x = Rev_Var(2.0)
 	z1 = Rev_Var.sqrt(x)
 	z1.grad_value = 1
+	z2 = Rev_Var.sqrt(2)
 	assert z1.value == pytest.approx(1.4142135623730951)
 	assert x.grad() == pytest.approx(0.3535533905932738)
+	assert z2 == np.sqrt(2)
 
 def test_logistic():
 	x = Rev_Var(3.0)
 	z = Rev_Var.logistic(x)
 	z.grad_value = 1
+	z2 = Rev_Var.logistic(3.0)
 	assert z.value == pytest.approx(1 / (1+np.exp(-3)))
 	assert x.grad() == pytest.approx(np.exp(3) / ((1 + np.exp(3))**2))
+	assert z2 == 1 / (1 + np.exp(-3.0))
 
 def test_sinh():
 	x = Rev_Var(2.0)
@@ -195,7 +207,7 @@ def test_tahh():
 	z.grad_value = 1
 	z4 = Rev_Var.tanh(2)
 	assert z.value == pytest.approx(0.964027580075817)
-	assert z4 == pytest.approx(0.964027580075817)
+	assert z4 == (np.exp(2) - np.exp(-2)) / (np.exp(2) + np.exp(-2))
 	assert x.grad() == pytest.approx(0.07065082485316432)
 
 def test_sin():
