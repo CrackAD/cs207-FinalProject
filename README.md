@@ -14,7 +14,6 @@ EasyDiff is an automatic differentiation python library with forward and reverse
 Simply open your terminal and type the following command:
 ```
 pip install EasyDiff
-
 ```
 **Update The Package**
 
