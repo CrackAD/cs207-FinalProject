@@ -86,6 +86,25 @@ Below is a concrete example of reverse mode:
 
 #### Installation
 
+##### Option One: Downloading Using Pip
+
+**Get The Package**
+
+Simply open your terminal and type the following command:
+```
+pip install crackad
+
+```
+**Update The Package**
+
+To get new releases, paste this into your terminal:
+```
+pip install crackad --upgrade
+```
+We highly recommend installing the package with `pip`. Yet, if that doesn't work for you, you can still get our package with the second option below.
+
+##### Option Two: Downloading From GitHub
+
 **Clone the Repository**
 
 Clone our GitHub repository and navigate into this directory in your terminal:
@@ -162,29 +181,40 @@ EasyDiff/
 	__init__.py
 	ad.py
 	var.py
-	tests/
-		__init__.py
-		test_ad.py
-		test_var.py
+    rev_var.py
+
 docs/
+    documentation.md
 	milestone1.md
 	milestone2.md
-	generalized_chain_rule.png
-	milestone2_graph.png	
+    figures/
+        generalized_chain_rule.png
+        milestone2_graph.png
+        reverse_mode.png
+
+tests/
+    __init__.py
+    test_ad.py
+    test_var.py
+    test_rev_ad.py
+    test_rev_var.py
+
 README.md
 requirements.txt
+setup.py
 LICENSE
 ```
-In the directory, we have two python modules `ad.py` and `var.py`. 
+In the directory, we have three python modules `ad.py`, `var.py` and `rev_var.py`. 
 
-* `ad.py`: main algorithms including automatic differentiation and calculating jacobian matrix
-* `var.py`: dual number constructions, basic math operations overloaded, and other elementary functions. 
+* `ad.py`: main algorithms including automatic differentiation and calculating jacobian matrix, including both forward the reverse modes.
+* `var.py`: dual number constructions, basic math operations overloaded, and other elementary functions in the forward mode.
+* `rev_var.py`: the reverse mode of `var.py`.
 
 We also include dependencies `numpy` to overload elementory operations.
 
 Our test suite is in the `tests` folder, and we implement `pytest` and `doctest` to write comprehensive tests to provide full coverage for our code. We use `TravisCI` and `CodeCov` to automate the testing process.
 
-EasyDiff has not been distributed on PyPI yet. Instead, users could manully clone our project repository to their personal workspace. Instructions of manual installation is specified in the **Installation** section above.
+EasyDiff is distributed on PyPI. Thus, users could choose to either use `pip` or manully clone our project repository to their personal workspace. Instructions of the two options is specified in the **Installation** section above.
 
 ## Implementation
 
