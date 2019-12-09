@@ -95,14 +95,14 @@ Below is a concrete example of reverse mode:
 
 Simply open your terminal and type the following command:
 ```
-pip install EasyDiff
+pip install easydiff
 
 ```
 **Update The Package**
 
 To get new releases, paste this into your terminal:
 ```
-pip install EasyDiff --upgrade
+pip install easydiff --upgrade
 ```
 We highly recommend installing the package with `pip`. Yet, if that doesn't work for you, you can still get our package with the second option below.
 
