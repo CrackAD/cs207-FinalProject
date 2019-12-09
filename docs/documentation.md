@@ -328,7 +328,7 @@ Regards the external dependencies, reverse mode implementation depends on the sa
 
 ## Future work
 ### Higher order derivative
-Our implementation currently allows a scalar or a vector function with multiple scalar inputs. We allow users to compute the first order derivatives. We would like to generalize it to any order a user specified. Higher order derivatives are important in various fields. For example, in physics, solving Possion equations require second order derivatives. We would allow users to input a `order` derivative and compute all derivatives up to that order.
+Our implementation currently allows a scalar or a vector function with multiple scalar inputs. We allow users to compute the first order derivatives. We would like to generalize it to any order a user specified. Higher order derivatives are important in various fields. For example, in physics, solving Possion equations require second order derivatives. We would allow users to input a `order` parameter and compute all derivatives up to that order.
 
 ### Optimization algotithms
 Our implementation supports both forward and reverse mode to calculate first order derivatives. We would like incorporate reverse mode calculation with gradient-based optimiztion algorithms, such as gradient descent and BFGS. For gradient descent, given a loss function with multiple parameters, we find the critical point by taking steps proportaiton to current gradient. 
