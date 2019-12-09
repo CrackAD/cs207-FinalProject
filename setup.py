@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="CrackAD", # Replace with your own username
-    version="0.0.1",
+    name="EasyDiff", # Replace with your own username
+    version="0.0.2",
     author="CS207 Group18",
     author_email="kangliwu@hsph.harvard.edu",
     description="An auto differentiation library",
