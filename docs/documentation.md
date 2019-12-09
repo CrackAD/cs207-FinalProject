@@ -156,16 +156,29 @@ To use CrackAD, create a .py file (`yourname.py`) with the following lines of co
 ```
 from EasyDiff.ad import AD
 from EasyDiff.var import Var
+from EasyDiff.ad import AD_Mode
+from EasyDiff.rev_var import Rev_Var
 import numpy as np
 
+## The forward mode
 # give it a function of your choice
 func = lambda x,y: Var.log(x) ** Var.sin(y)
 
 # give the initial values to take the derivatives at
-ad = AD(vals=np.array([2, 2]), ders=np.array([1, 1]))
+ad = AD(np.array([5, 1]), np.array([1, 1]), AD_Mode.FORWARD)
 
 # calculate and print the derivatives
 print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(func))))
+
+## The reverse mode
+# give it a function of your choice
+func = lambda x, y: Rev_Var.log(x) ** Rev_Var.sin(y)
+
+# give the initial values to take the derivatives at
+ad = AD(np.array([5, 1]), np.array([1, 1]), AD_Mode.REVERSE)
+
+# calculate and print the derivatives
+print("Var.log(x) ** Var.sin(y): {}".format(vars(ad.auto_diff(f1))))
 ```
 Then, you can run the file in a terminal as follows:
 ```
