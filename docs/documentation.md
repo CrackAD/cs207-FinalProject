@@ -326,4 +326,10 @@ We also define a `AD_Mode` enum class in `ad.py`, and extend `AD` class to suppo
 
 Regards the external dependencies, reverse mode implementation depends on the same libraries as the basic forward mode (ie, numpy, pytest, pytest-cov, doctest); it also covers all the elementary functions mentioned in the [Basic: Forward Mode Implementation](#basic-forward-mode-implementation) section. 
 
+## Future work
+### Higher order derivative
+Our implementation currently allows a scalar or a vector function with multiple scalar inputs. We allow users to compute the first order derivatives. We would like to generalize it to any order a user specified. Higher order derivatives are important in various fields. For example, in physics, solving Possion equations require second order derivatives. We would allow users to input a `order` derivative and compute all derivatives up to that order.
+
+### Optimization algotithms
+Our implementation supports both forward and reverse mode to calculate first order derivatives. We would like incorporate reverse mode calculation with gradient-based optimiztion algorithms, such as gradient descent and BFGS. For gradient descent, given a loss function with multiple parameters, we find the critical point by taking steps proportaiton to current gradient. 
 
