@@ -4,11 +4,11 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="EasyDiff", # Replace with your own username
-    version="0.0.2",
-    author="CS207 Group18",
-    author_email="kangliwu@hsph.harvard.edu",
-    description="An auto differentiation library",
+    name="EasyDiff",
+    version="0.0.3",
+    author="Yang Zhou, Ruby Zhang, Kangli Wu, and Emily Gould",
+    author_email="yangzhou@g.harvard.edu, yiqingzhang@fas.harvard.edu, kangliwu@hsph.harvard.edu, egould@mba2020.hbs.edu",
+    description="An automatic differentiation library (support forward and reverse mode)",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/CrackAD/cs207-FinalProject",
