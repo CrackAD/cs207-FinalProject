@@ -1,7 +1,7 @@
 # EasyDiff [![Build Status](https://travis-ci.com/CrackAD/cs207-FinalProject.svg?branch=master)](https://travis-ci.com/CrackAD/cs207-FinalProject) [![codecov](https://codecov.io/gh/CrackAD/cs207-FinalProject/branch/master/graph/badge.svg)](https://codecov.io/gh/CrackAD/cs207-FinalProject)
 
 
-EasyDiff is an automatic differentiation python library with forward and reverse mode supported. EasyDiff is developed as a Harvard CS207 (19Fall) course project by **Group 18: Yang Zhou, Ruby Zhang, Kangli Wu, and Emily Gould.** Check our [documentation](./docs/documentation.md) for more details.  
+EasyDiff is an automatic differentiation python library with forward and reverse mode supported. EasyDiff is developed as a Harvard CS207 (19Fall) course project by **Group 18: [Yang Zhou](https://github.com/YangZhou1997), [Ruby Zhang](https://github.com/Ruby122), [Kangli Wu](https://github.com/KangliMalorie), and [Emily Gould](https://github.com/coolcilantro).** Check our [documentation](./docs/documentation.md) for more details.  
 
 ## How to use CrackAD
 
